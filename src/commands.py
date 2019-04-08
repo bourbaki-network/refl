@@ -230,7 +230,7 @@ class Commands:
     self.history.append(command)
     return self.wrap(command)
 
-  def highlight(self:Any, interactionId:int=0, where:Range) -> str:
+  def highlight(self:Any, interactionId:int=0, where:Range=Range()) -> str:
 
     command = 'Cmd_highlight {interactionId} {where} "{src}"'.format(
       interactionId=str(interactionId),
