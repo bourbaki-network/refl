@@ -8,6 +8,7 @@ from functools import update_wrapper
 import click
 
 from .commands import *
+from .interpret import *
 
 
 CONTEXT_SETTINGS = {
@@ -25,7 +26,11 @@ def process_commands(processors):
   """This result callback is invoked with an iterable of all the chained subcommands.
   """
 
+  if 'repl' in [p for p, _ in processors]:
+    Prompt().repl()
+
   cmds = Commands(processors[0][1]['file'].name)
+  repl = Repl()
 
   # remove all file arguments
   [ p[1].pop('file') if 'file' in p[1] else None for p in processors ]
@@ -33,10 +38,10 @@ def process_commands(processors):
   commands = [ p[0] for p in processors ]
   args     = [ p[1] for p in processors ]
 
-  c = [ getattr(cmds, c)(**a) if hasattr(cmds, c) else Exception('Wrong command perhaps: ' + c) \
+  cs = [ getattr(cmds, c)(**a) if hasattr(cmds, c) else Exception('Wrong command perhaps: ' + c) \
           for c, a in list(zip(commands, args)) ]
 
-  print(c)
+  repl.run(cs)
 
 
 # Help statements
@@ -47,6 +52,11 @@ range_help = 'Position of file specified as ((start₁, end₁), (start₂, end�
 compute_help = 'Computation mode, can be one of `DefaultCompute`, `IgnoreAbstract`, `UseShowInstance`, defaults to `DefaultCompute`'
 interaction_help = 'Interaction id, defaults to 0'
 
+@cli.command('repl')
+def repl():
+  """Start a REPL.
+  """
+  return ('repl', {})
 
 @cli.command('compile')
 @click.option('-f', '--file', 'file', type=click.File('r'), multiple=False, help=file_help)
