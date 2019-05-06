@@ -48,14 +48,23 @@ class Range:
       '(intervalsToRange (Just (mkAbsolute "{p}")) {intervals})'.format(p=p, intervals=' '.join(intervals))
 
 
-def rangeBuilder(f:str, p1:int, l1:int, c1:int, p2:int, l2:int, c2:int):
+def range_builder(f:str, l1:int, c1:int, l2:int, c2:int) -> Range:
   assert path.exists(f)
+  p1 = (l1 * c1) + 1
+  p2 = (l2 * c2) + 1
 
   pos1 = Position(f, str(p1), str(l1), str(c1))
   pos2 = Position(f, str(p2), str(l2), str(c2))
 
   intr = Interval(pos1, pos2)
   return Range([intr])
+
+def range_parser_validator(r:str) -> bool:
+  r = [ x for x in r.strip().split(' ') if not ['(', ')', ','].contains(x) ]
+
+  assert (len(r) == 4 or len(r) == 2)
+  return false
+
 
 class Commands:
   def __init__(self:Any, srcFile:str):

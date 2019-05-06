@@ -2,8 +2,6 @@
 
 from typing import *
 from typing import IO
-from os import path
-from functools import update_wrapper
 
 import click
 
@@ -27,10 +25,9 @@ def process_commands(processors):
   """
 
   if 'repl' in [p for p, _ in processors]:
-    Prompt().repl()
+    Repl().run()
 
   cmds = Commands(processors[0][1]['file'].name)
-  repl = Repl()
 
   # remove all file arguments
   [ p[1].pop('file') if 'file' in p[1] else None for p in processors ]
@@ -38,7 +35,7 @@ def process_commands(processors):
   commands = [ p[0] for p in processors ]
   args     = [ p[1] for p in processors ]
 
-  cs = [ getattr(cmds, c)(**a) if hasattr(cmds, c) else Exception('Wrong command perhaps: ' + c) \
+  cs = [ getattr(cmds, c)(**a) if hasattr(cmds, c) else Exception('Wrong command perhaps: ' + c)
           for c, a in list(zip(commands, args)) ]
 
   repl.run(cs)
@@ -48,7 +45,7 @@ def process_commands(processors):
 file_help = 'Path of file to load (absolute or relative).'
 rewrite_help = 'Rewrite modes, can be one of `AsIs`, `Instantiated`, `HeadNormal`, `Simplified`, `Normalised`, defaults to `Simplified`'
 expr_help = 'Expression, in case no position (--where) is given'
-range_help = 'Position of file specified as ((start₁, end₁), (start₂, end₂)) or defaults to none. Note: for most commands, in case of no position, an expr needs to be specified'
+range_help = 'Position of file specified as `((start₁, end₁), (start₂, end₂))` or `(position₁, position₂)` or defaults to none. Note: for most commands, in case position is not specified, an expr needs to be specified'
 compute_help = 'Computation mode, can be one of `DefaultCompute`, `IgnoreAbstract`, `UseShowInstance`, defaults to `DefaultCompute`'
 interaction_help = 'Interaction id, defaults to 0'
 

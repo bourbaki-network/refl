@@ -5,11 +5,10 @@ import sys
 sys.path.insert(0, '.')
 
 from src.commands import *
-from src.log import Logging
 
 def test_range():
-  r = rangeBuilder('./test/test.agda', 6, 6, 8, 6, 6, 12)
-  assert r() == '(intervalsToRange (Just (mkAbsolute "./test/test.agda")) [Interval  (Pn () 6 6 8 ) (Pn () 6 6 12 ) ])'
+  r = range_builder('./test/test.agda', 6, 8, 6, 12)
+  assert r() == '(intervalsToRange (Just (mkAbsolute "./test/test.agda")) [Interval  (Pn () 49 6 8 ) (Pn () 73 6 12 ) ])'
 
 def test_compile():
   assert Commands('./test/test.agda').compile('GHC', []) == \
@@ -40,20 +39,20 @@ def test_solveAll():
     'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_solveAll Normalised)'
 
 def test_solveOne():
-  r = rangeBuilder('./test/test.agda', 6, 6, 8, 6, 6, 12)
+  r = range_builder('./test/test.agda', 6, 8, 6, 12)
 
   assert Commands('./test/test.agda').solveOne('Normalised', 0, r, 'Agda.Builtin.Nat') == \
-    'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_solveOne Normalised 0 (intervalsToRange (Just (mkAbsolute "./test/test.agda")) [Interval  (Pn () 6 6 8 ) (Pn () 6 6 12 ) ]) "Agda.Builtin.Nat")'
+    'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_solveOne Normalised 0 (intervalsToRange (Just (mkAbsolute "./test/test.agda")) [Interval  (Pn () 49 6 8 ) (Pn () 73 6 12 ) ]) "Agda.Builtin.Nat")'
 
 def test_autoAll():
   assert Commands('./test/test.agda').autoAll() == \
     'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_autoAll)'
 
 def test_autoOne():
-  r = rangeBuilder('./test/test.agda', 6, 6, 8, 6, 6, 12)
+  r = range_builder('./test/test.agda', 6, 8, 6, 12)
 
   assert Commands('./test/test.agda').autoOne(0, r, 'Agda.Builtin.Nat') == \
-    'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_autoOne 0 (intervalsToRange (Just (mkAbsolute "./test/test.agda")) [Interval  (Pn () 6 6 8 ) (Pn () 6 6 12 ) ]) "Agda.Builtin.Nat")'
+    'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_autoOne 0 (intervalsToRange (Just (mkAbsolute "./test/test.agda")) [Interval  (Pn () 49 6 8 ) (Pn () 73 6 12 ) ]) "Agda.Builtin.Nat")'
 
 def test_auto():
   r = Range()
@@ -78,10 +77,10 @@ def test_tokenHighlighting():
     'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_tokenHighlighting "./test/test.agda" Keep)'
 
 def test_highlight():
-  r = rangeBuilder('./test/test.agda', 6, 6, 8, 6, 6, 12)
+  r = range_builder('./test/test.agda', 6, 8, 6, 12)
 
   assert Commands('./test/test.agda').highlight(0, r) == \
-    'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_highlight 0 (intervalsToRange (Just (mkAbsolute "./test/test.agda")) [Interval  (Pn () 6 6 8 ) (Pn () 6 6 12 ) ]) "./test/test.agda")'
+    'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_highlight 0 (intervalsToRange (Just (mkAbsolute "./test/test.agda")) [Interval  (Pn () 49 6 8 ) (Pn () 73 6 12 ) ]) "./test/test.agda")'
 
 def test_give():
   assert Commands('./test/test.agda').give('WithoutForce', 0, Range(), 'proof₁') == \
