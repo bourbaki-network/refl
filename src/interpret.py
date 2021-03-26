@@ -8,14 +8,14 @@ import tempfile
 from os import path
 from typing import *
 
-from prompt_toolkit import PromptSession, prompt
+from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from prompt_toolkit.completion import Completer, Completion, WordCompleter
+# from prompt_toolkit.completion import Completer, Completion, WordCompleter
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style
 
-from cmd_args import *
+from args import *
 from config import *
 from util.log import Logging
 
