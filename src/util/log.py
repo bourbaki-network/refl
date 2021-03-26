@@ -1,25 +1,29 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-import sys, os
-
-import coloredlogs, logging
+import logging
+import os
+import sys
 from logging.handlers import RotatingFileHandler
 from typing import *
+
+import coloredlogs
 
 from config import *
 
 
-def logger(logPath:str=LOGGING, fileName:str=LOGFILE, level:str='DEBUG'):
+def logger(logPath: str = LOGGING, fileName: str = LOGFILE, level: str = 'DEBUG'):
 
-    logFormatter:Any = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
-    logger:Any = logging.getLogger(__name__)
-    logger.setLevel(getattr(logging, level.upper()))
+  logFormatter: Any = logging.Formatter(
+    "%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
+  logger: Any = logging.getLogger(__name__)
+  logger.setLevel(getattr(logging, level.upper()))
 
-    return logger
+  return logger
 
 
 class Logging:
-  def __init__(self:Any, level:str='info'):
+  def __init__(self: Any, level: str = 'info'):
     self.logger = logger(level)
 
     coloredlogs.install(level='DEBUG', logger=self.logger)
@@ -28,5 +32,5 @@ class Logging:
     coloredlogs.install(level='ERROR', logger=self.logger)
     coloredlogs.install(level='CRITICAL', logger=self.logger)
 
-  def __call__(self:Any):
+  def __call__(self: Any):
     return self.logger

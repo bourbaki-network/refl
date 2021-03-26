@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
+import getpass
 import os
 from os import path
 from typing import *
-import getpass
-
-from util.log import Logging
 
 from config import *
+from util.log import Logging
+
 from .util import *
 
 log = Logging(LOGLEVEL)()
 
 
 class Installation:
-  def __init__(self, root:str=ROOT, version:str='latest'):
+  def __init__(self, root: str = ROOT, version: str = 'latest'):
     assert path.exists(root), 'Root path does not exist'
 
     self.root = root
     self.version = version
 
-  def __call__(self:Any) -> bool:
-    log.info('====== Installing Agda version {self.version} at {self.root}/agda-{self.version} ======')
+  def __call__(self: Any) -> bool:
+    log.info(
+      '====== Installing Agda version {self.version} at {self.root}/agda-{self.version} ======')
     log.info('')
     log.info('')
 
@@ -29,18 +31,13 @@ class Installation:
     stack_path = path.join(self.root, 'agda-' + self.version)
 
     os.mkdir(stack_path)
-    download_url(
-      'https://get.haskellstack.org/stable/linux-x86_64.tar.gz',
-      path.join(stack_path, 'stack.tar.gz')
-    )
+    download_url('https://get.haskellstack.org/stable/linux-x86_64.tar.gz',
+                 path.join(stack_path, 'stack.tar.gz'))
     unzip(path.join(stack_path, 'stack.tar.gz'))
     os.remove(path.join(stack_path, 'stack.tar.gz'))
 
-    stack_dir = [ x for x in os.listdir(stack_path) if 'stack' in x ][0]
-    os.rename(
-      path.join(path.join(stack_path, stack_dir), 'stack'),
-      path.join(stack_path, 'stack')
-    )
+    stack_dir = [x for x in os.listdir(stack_path) if 'stack' in x][0]
+    os.rename(path.join(path.join(stack_path, stack_dir), 'stack'), path.join(stack_path, 'stack'))
 
     log.info('====== Installing Agda ======')
     ret = run('./stack install cabal-install', stack_path)
@@ -56,7 +53,9 @@ class Installation:
     os.mkdir(dot_agda)
 
     log.info('Next things to do:')
-    log.info('Run `agdatool install bash` or `agdatool install zsh` after this for integrating with respective shells')
+    log.info(
+      'Run `agdatool install bash` or `agdatool install zsh` after this for integrating with respective shells'
+    )
 
     return True
 
@@ -69,5 +68,3 @@ class Installation:
     with open(path.join(HOME, '.zshrc'), 'w+') as zshrc:
       zshrc.write('export PATH=~/.local/bin:$PATH')
       zshrc.write('\n')
-
-

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import pytest
 import sys
@@ -157,4 +158,3 @@ def test_show_version():
 def test_abort():
   assert Commands('./test/test.agda').abort() == \
     'IOTCM "./test/test.agda" NonInteractive Indirect (Cmd_abort)'
-

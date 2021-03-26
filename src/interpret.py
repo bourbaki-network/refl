@@ -1,56 +1,54 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-from typing import *
-import subprocess
 import datetime
 import os
-from os import path
+import subprocess
 import tempfile
+from os import path
+from typing import *
 
-from prompt_toolkit import prompt, PromptSession
-from prompt_toolkit.history import FileHistory
+from prompt_toolkit import PromptSession, prompt
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from prompt_toolkit.completion import WordCompleter, Completer, Completion
-from prompt_toolkit.styles import Style
+from prompt_toolkit.completion import Completer, Completion, WordCompleter
 from prompt_toolkit.formatted_text import HTML
+from prompt_toolkit.history import FileHistory
+from prompt_toolkit.styles import Style
 
-from util.log import Logging
-from config import *
 from cmd_args import *
-
+from config import *
+from util.log import Logging
 
 log = Logging(LOGLEVEL)()
 
 
 class Repl:
-
   def __init__(self):
-    self.commands = ['compile', 'load',
-      'constraints', 'metas', 'show_module_contents_toplevel',
-      'search_about_toplevel', 'solveAll', 'solveOne', 'autoAll',
-      'autoOne', 'auto', 'infer_toplevel', 'compute_toplevel',
-      'load_highlighting_info', 'tokenHighlighting', 'highlight',
-      'give', 'refine', 'intro', 'refine_or_intro', 'context',
-      'helper_function', 'infer', 'goal_type', 'elaborate_give',
-      'goal_type_context', 'goal_type_context_infer',
-      'goal_type_context_check', 'show_module_contents',
-      'make_case', 'why_in_scope', 'compute',
-      'why_in_scope_toplevel', 'show_version', 'abort']
+    self.commands = [
+      'compile', 'load', 'constraints', 'metas', 'show_module_contents_toplevel',
+      'search_about_toplevel', 'solveAll', 'solveOne', 'autoAll', 'autoOne', 'auto',
+      'infer_toplevel', 'compute_toplevel', 'load_highlighting_info', 'tokenHighlighting',
+      'highlight', 'give', 'refine', 'intro', 'refine_or_intro', 'context', 'helper_function',
+      'infer', 'goal_type', 'elaborate_give', 'goal_type_context', 'goal_type_context_infer',
+      'goal_type_context_check', 'show_module_contents', 'make_case', 'why_in_scope', 'compute',
+      'why_in_scope_toplevel', 'show_version', 'abort'
+    ]
 
-    self.arguments = ['--file', '--backend', '--cmds', '--rewrite',
-      '--expr', '--interactionId', '--where', '--computeMode',
-      '--remove', '--whether']
+    self.arguments = [
+      '--file', '--backend', '--cmds', '--rewrite', '--expr', '--interactionId', '--where',
+      '--computeMode', '--remove', '--whether'
+    ]
 
-    self.static = ["GHC", "GHCNoMain", "LaTeX", "QuickLaTeX",
-      "AsIs", "Instantiated", "HeadNormal", "Simplified", "Normalised",
-      "DefaultCompute", "IgnoreAbstract", "UseShowInstance",
-      "Remove", "Keep",
-      "WithForce", "WithoutForce"]
+    self.static = [
+      "GHC", "GHCNoMain", "LaTeX", "QuickLaTeX", "AsIs", "Instantiated", "HeadNormal",
+      "Simplified", "Normalised", "DefaultCompute", "IgnoreAbstract", "UseShowInstance", "Remove",
+      "Keep", "WithForce", "WithoutForce"
+    ]
 
     self.style = Style.from_dict({
-        'pygments.comment':   '#888888 bold',
-        'pygments.keyword':   '#ff88ff bold',
-        'bottom-toolbar': '#222 bg:#ccc'
+      'pygments.comment': '#888888 bold',
+      'pygments.keyword': '#ff88ff bold',
+      'bottom-toolbar': '#222 bg:#ccc'
     })
 
     self.session = None
@@ -61,7 +59,10 @@ class Repl:
 
   def other(self):
     now = datetime.datetime.now()
-    return path.split(os.getcwd())[-1] + ' - ' + ':'.join([format(now.hour, '02'), format(now.minute, '02'), format(now.second, '02')])
+    return path.split(os.getcwd())[-1] + ' - ' + ':'.join(
+      [format(now.hour, '02'),
+       format(now.minute, '02'),
+       format(now.second, '02')])
 
   def run(self, history='~/.refl_history'):
     history = path.abspath(path.expanduser(history))
@@ -69,8 +70,10 @@ class Repl:
     if not path.exists(history):
       os.mknod(history)
 
-    self.session = self.session if self.session is not None else PromptSession(history=FileHistory(history))
-    self.temp = self.temp if self.temp is not None else tempfile.NamedTemporaryFile(suffix='.agda', mode='a+').name
+    self.session = self.session if self.session is not None else PromptSession(
+      history=FileHistory(history))
+    self.temp = self.temp if self.temp is not None else tempfile.NamedTemporaryFile(suffix='.agda',
+                                                                                    mode='a+').name
 
     header = 'module {name} where'.format(name=path.basename(self.temp)[:-5])
 
@@ -79,12 +82,17 @@ class Repl:
 
     while 1:
       user_input = self.session.prompt(
-        HTML('  <b><style fg="hotpink">refl ♠</style></b> <b><style fg="#666">{date}</style></b> <b><style fg="hotpink">⟹</style></b>  '.format(date=self.other())),
+        HTML(
+          '  <b><style fg="hotpink">refl ♠</style></b> <b><style fg="#666">{date}</style></b> <b><style fg="hotpink">⟹</style></b>  '
+          .format(date=self.other())),
         auto_suggest=AutoSuggestFromHistory(),
-        completer=WordCompleter(self.commands + self.get_local_files() + self.static + self.arguments, ignore_case=True),
+        completer=WordCompleter(self.commands + self.get_local_files() + self.static
+                                + self.arguments,
+                                ignore_case=True),
         style=self.style,
-        bottom_toolbar=HTML('  <b><style bg="hotpink">Refl ♠</style></b> the Agda REPL. Docs: http://monoid.space/refl.html')
-      )
+        bottom_toolbar=HTML(
+          '  <b><style bg="hotpink">Refl ♠</style></b> the Agda REPL. Docs: http://monoid.space/refl.html'
+        ))
 
       user_input = user_input.strip()
 
@@ -113,5 +121,3 @@ class Repl:
             temp.close()
 
           subprocess.call(['agda', '--no-main', '--compile', self.temp], cwd='/tmp')
-
-

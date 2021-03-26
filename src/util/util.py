@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-from typing import *
 import subprocess
+import tarfile
 import urllib.request
+from typing import *
 
 from tqdm import tqdm
-import tarfile
 
 from config import *
+
 
 class DownloadProgressBar(tqdm):
   def update_to(self, b=1, bsize=1, tsize=None):
@@ -15,12 +17,13 @@ class DownloadProgressBar(tqdm):
       self.total = tsize
     self.update(b * bsize - self.n)
 
+
 def download_url(url, output_path):
-  with DownloadProgressBar(unit='B', unit_scale=True,
-                           miniters=1, desc=url.split('/')[-1]) as t:
+  with DownloadProgressBar(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
     urllib.request.urlretrieve(url, filename=output_path, reporthook=t.update_to)
 
-def unzip(fname:str):
+
+def unzip(fname: str):
   dir = os.path.dirname(os.path.realpath(fname))
 
   if (fname.endswith("tar.gz")):
@@ -28,7 +31,8 @@ def unzip(fname:str):
     tar.extractall(dir)
     tar.close()
 
-def run(cmd:str, cwd:str) -> int:
+
+def run(cmd: str, cwd: str) -> int:
   ret = -1
 
   try:
@@ -40,5 +44,7 @@ def run(cmd:str, cwd:str) -> int:
 
 
 T = TypeVar('T')
-def flatten(xs:List[List[T]]) -> List[T]:
-  return [ y for ys in xs for y in ys ]
+
+
+def flatten(xs: List[List[T]]) -> List[T]:
+  return [y for ys in xs for y in ys]
