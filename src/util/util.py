@@ -7,7 +7,7 @@ import urllib.request
 from tqdm import tqdm
 import tarfile
 
-from .config import *
+from config import *
 
 class DownloadProgressBar(tqdm):
   def update_to(self, b=1, bsize=1, tsize=None):

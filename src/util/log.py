@@ -6,7 +6,7 @@ import coloredlogs, logging
 from logging.handlers import RotatingFileHandler
 from typing import *
 
-from .config import *
+from config import *
 
 
 def logger(logPath:str=LOGGING, fileName:str=LOGFILE, level:str='DEBUG'):

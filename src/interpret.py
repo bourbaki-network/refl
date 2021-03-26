@@ -14,9 +14,9 @@ from prompt_toolkit.completion import WordCompleter, Completer, Completion
 from prompt_toolkit.styles import Style
 from prompt_toolkit.formatted_text import HTML
 
-from .log import Logging
-from .config import *
-from .cmd_args import *
+from util.log import Logging
+from config import *
+from cmd_args import *
 
 
 log = Logging(LOGLEVEL)()

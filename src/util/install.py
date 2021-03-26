@@ -5,9 +5,10 @@ from os import path
 from typing import *
 import getpass
 
-from logging import Logging
+from util.log import Logging
+
 from config import *
-from util import *
+from .util import *
 
 log = Logging(LOGLEVEL)()
 

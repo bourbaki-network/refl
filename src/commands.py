@@ -4,9 +4,9 @@ from typing import *
 
 from os import path
 
-from .util import flatten
-from .log import Logging
-from .config import *
+from util import flatten
+from util.log import Logging
+from config import *
 
 log = Logging(LOGLEVEL)()
 

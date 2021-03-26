@@ -4,9 +4,9 @@ from os import path
 from os.path import expanduser
 
 HOME = expanduser("~")
-ROOT = path.join(HOME, '.agdatool')
+ROOT = path.join(HOME, '.refl')
 
 LOGGING = HOME
-LOGFILE = 'agdatool.log'
+LOGFILE = 'refl.log'
 LOGLEVEL = 'info'
 

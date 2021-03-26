@@ -5,8 +5,8 @@ from typing import IO
 
 import click
 
-from .commands import *
-from .interpret import *
+from commands import *
+from interpret import *
 
 
 CONTEXT_SETTINGS = {
@@ -384,8 +384,4 @@ def abort_cmd():
   """Abort currently ongoing action.
   """
   return ('abort', {})
-
-
-if __name__ == '__main__':
-  cli()
 
