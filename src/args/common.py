@@ -4,6 +4,7 @@
 import click
 
 from args.agda import agda
+from args.pkg import pkg
 from args.repl import repl
 
 CONTEXT_SETTINGS = {
@@ -20,3 +21,4 @@ def cli():
 
 cli.add_command(repl)
 cli.add_command(agda)
+cli.add_command(pkg)

@@ -5,7 +5,6 @@ from typing import *
 
 import click
 
-from commands import *
 from interpret import *
 
 CONTEXT_SETTINGS = {
@@ -26,11 +25,30 @@ def repl():
 @repl.resultcallback()
 def repl_process_commands(processors):
   if 'repl' in [p for p, _ in processors]:
-    Repl().run()
+    args = [a for p, a in processors if p == 'repl'][0]
+    Repl(args).run()
 
 
 @repl.command('agda')
-def agda():
+@click.option('-p',
+              '--prelude',
+              'prelude',
+              type=str,
+              multiple=False,
+              help='File to load as prelude to the REPL')
+@click.option('-i',
+              '--include-path',
+              'includes',
+              type=list[str],
+              multiple=True,
+              help='Directories to look for including modules')
+@click.option('-l',
+              '--library',
+              'library',
+              type=str,
+              multiple=False,
+              help='Use library in directory')
+def agda(prelude: str, includes: list[str], library: str):
   """Start an Agda REPL.
   """
-  return ('repl', {})
+  return ('repl', {'prelude': prelude, 'includes': includes, 'library': library})

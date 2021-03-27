@@ -3,6 +3,7 @@
 
 import datetime
 import os
+import random
 import subprocess
 import tempfile
 from os import path
@@ -17,13 +18,13 @@ from prompt_toolkit.styles import Style
 
 from args import *
 from config import *
-from util.log import Logging
+from util import Logging, emojis, module_name_from_file_name
 
 log = Logging(LOGLEVEL)()
 
 
-class Repl:
-  def __init__(self):
+class Repl():
+  def __init__(self, args=None):
     self.commands = [
       'compile', 'load', 'constraints', 'metas', 'show_module_contents_toplevel',
       'search_about_toplevel', 'solveAll', 'solveOne', 'autoAll', 'autoOne', 'auto',
@@ -48,16 +49,17 @@ class Repl:
     self.style = Style.from_dict({
       'pygments.comment': '#888888 bold',
       'pygments.keyword': '#ff88ff bold',
-      'bottom-toolbar': '#222 bg:#ccc'
+      'bottom-toolbar': '#56c bg:#ccc'
     })
 
+    self.args = args
     self.session = None
     self.temp = None
 
   def get_local_files(self) -> List[str]:
     return os.listdir(os.getcwd())
 
-  def other(self):
+  def prompt(self):
     now = datetime.datetime.now()
     return path.split(os.getcwd())[-1] + ' - ' + ':'.join(
       [format(now.hour, '02'),
@@ -74,17 +76,30 @@ class Repl:
       history=FileHistory(history))
     self.temp = self.temp if self.temp is not None else tempfile.NamedTemporaryFile(suffix='.agda',
                                                                                     mode='a+').name
+    AGDA = ['agda', '--no-main', '--compile']
 
-    header = 'module {name} where'.format(name=path.basename(self.temp)[:-5])
+    # For temp file xyz.agda, generate `module xyz where`
+    header = f'module {module_name_from_file_name(path.basename(self.temp))} where'
 
+    # Prepare the temp file which we are going to use for this REPL session
     with open(self.temp, 'a+') as temp:
       temp.write(header + '\n\n')
+
+      print(self.args)
+      if 'prelude' in self.args:
+        prelude = f'import {module_name_from_file_name(path.basename(self.args["prelude"]))}'
+        prelude_path = path.abspath(path.dirname(self.args['prelude']))
+        temp.write(prelude + '\n\n')
+        AGDA += ['--include-path', prelude_path]
+
+    print(AGDA)
+    subprocess.call(AGDA + [self.temp], cwd='/tmp')
 
     while 1:
       user_input = self.session.prompt(
         HTML(
-          '  <b><style fg="hotpink">refl ♠</style></b> <b><style fg="#666">{date}</style></b> <b><style fg="hotpink">⟹</style></b>  '
-          .format(date=self.other())),
+          f'<b><style fg="#08f">refl★</style></b> {random.choice(emojis)}<b><style fg="#08f">  {self.prompt()} </style></b> <b><style fg="hotpink">⟹</style></b>  '
+        ),
         auto_suggest=AutoSuggestFromHistory(),
         completer=WordCompleter(self.commands + self.get_local_files() + self.static
                                 + self.arguments,
@@ -117,7 +132,7 @@ class Repl:
         # agda code
         else:
           with open(self.temp, 'a+') as temp:
-            temp.write('''{input}\n\n'''.format(input=str(user_input)))
+            temp.write(f'''{str(user_input)}\n\n''')
             temp.close()
 
-          subprocess.call(['agda', '--no-main', '--compile', self.temp], cwd='/tmp')
+          subprocess.call(AGDA + [self.temp], cwd='/tmp')

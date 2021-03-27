@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
 import subprocess
 import tarfile
 import urllib.request
@@ -34,12 +35,10 @@ def unzip(fname: str):
 
 def run(cmd: str, cwd: str) -> int:
   ret = -1
-
   try:
     ret = subprocess.run(cmd, cwd=cwd, shell=True, stderr=subprocess.STDOUT)
   except subprocess.CalledProcessError as e:
     pass
-
   return ret
 
 
@@ -48,3 +47,17 @@ T = TypeVar('T')
 
 def flatten(xs: List[List[T]]) -> List[T]:
   return [y for ys in xs for y in ys]
+
+
+def module_name_from_file_name(filename):
+  allowed_extensions = [
+    '.ladga.tex',
+    '.ladga.rst',
+    '.lagda.md',
+    '.lagda',
+    '.agda',
+  ]
+  for ext in allowed_extensions:
+    if ext in filename:
+      return filename.replace(ext, '')
+  return filename
