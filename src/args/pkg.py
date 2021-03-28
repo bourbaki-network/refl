@@ -6,6 +6,7 @@ from typing import *
 
 import click
 
+from install import VersionSwitcher
 from interpret import *
 
 CONTEXT_SETTINGS = {
@@ -25,19 +26,18 @@ def pkg():
 
 @pkg.resultcallback()
 def process_commands(processors):
-  # if 'repl' in [p for p, _ in processors]:
-  #   args = [a for p, a in processors if p == 'repl'][0]
-  #   Repl(args).run()
   pass
 
 
-@pkg.command('install')
-@click.option('-v',
-              '--version',
-              'version',
-              type=str,
-              multiple=False,
-              help='Version of Agda to install')
+@pkg.command('switch')
+@click.option(
+  '-v',
+  '--version',
+  'version',
+  type=str,
+  multiple=False,
+  help='Version of Agda to install',
+)
 @click.option('-g',
               '--global',
               'globally',
@@ -52,41 +52,44 @@ def process_commands(processors):
               is_flag=True,
               multiple=False,
               help='Install Agda for current user')
-def install(prelude: str, version: str, globally: bool, user: bool):
-  """Install Agda
+def switch(version: str, globally: bool, user: bool):
+  """Install new Agda version or switch between versions
   """
   location: str = os.getcwd()
+  install_root: str = path.join(path.expanduser('~'), 'bin')
   if globally:
-    location = '/usr/share/'
+    location = path.join(path.expanduser('~'), '.refl')
+    install_root = '/usr/bin'
   elif user:
-    location = path.expanduser('~')
-  print(location, "++++++++++++++++++++++++++++++++++")
+    location = path.join(path.expanduser('~'), '.refl')
+    if not path.exists(location):
+      os.mkdir(location)
 
-  return ('repl', {'prelude': prelude, 'includes': includes, 'library': library})
+  v = VersionSwitcher(location, install_root)
+  v.install()
+  return None
 
 
 @pkg.command('list')
-def list_versions(prelude: str, includes: list[str], library: str):
+def list_versions():
   """List available Agda versions
   """
-  return ('repl', {'prelude': prelude, 'includes': includes, 'library': library})
+  v = VersionSwitcher('.')
+  versions = v.get_available_versions()
+  print('Versions available:')
+  [print(v.replace('.deb', '')) for v in versions]
+  return None
 
 
-@pkg.command('switch')
-def switch(prelude: str, includes: list[str], library: str):
-  """Switch between installed Agda versions
-  """
-  return ('repl', {'prelude': prelude, 'includes': includes, 'library': library})
-
-
-@pkg.command('uninstall')
-@click.option('-v',
-              '--version',
-              'version',
-              type=str,
-              multiple=False,
-              help='Version of Agda to uninstall')
-def uninstall(prelude: str, includes: list[str], library: str):
-  """Uninstall Agda locally
-  """
-  return ('repl', {'prelude': prelude, 'includes': includes, 'library': library})
+# TODO: cleanup
+# @pkg.command('uninstall')
+# @click.option('-v',
+#               '--version',
+#               'version',
+#               type=str,
+#               multiple=False,
+#               help='Version of Agda to uninstall')
+# def uninstall(prelude: str, includes: list[str], library: str):
+#   """Uninstall Agda locally
+#   """
+#   return None

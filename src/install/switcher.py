@@ -22,7 +22,7 @@ class VersionSwitcher:
     self.install_root = install_root
 
   def latest(self) -> str:
-    versions = self._get_available_versions()
+    versions = self.get_available_versions()
     versions.reverse()
 
     for latest in versions:
@@ -38,13 +38,12 @@ class VersionSwitcher:
       inquirer.List(
         'version',
         message="Which version would you like to install?",
-        choices=self._get_available_versions(),
+        choices=[x.replace('.deb', '') for x in self.get_available_versions()],
       )
     ]
     version = inquirer.prompt(questions)
     version = version['version']
-    print(version)
-    ret = self._download(version)
+    ret = self._download(version + '.deb')
     if ret:
       destination = f"{self.root}/{version.replace('.deb', '')}"
       self._switch(destination)
@@ -62,22 +61,25 @@ class VersionSwitcher:
     try:
       filepath = path.join(self.root, filename)
       destination = f"{self.root}/{filename.replace('.deb', '')}"
+      tmp_dir = path.join(self.root, '.tmp')
 
-      download_url(f'http://ftp.de.debian.org/debian/pool/main/a/agda/{filename}', filepath)
-      unzip(filepath)
-      os.mkdir(path.join(self.root, '.tmp'))
-      Archive(filepath).extractall('.tmp')
-      data_tar = path.join('.tmp', 'data.tar')
-      Archive(data_tar).extractall('.tmp')
-      shutil.move(".tmp/usr/bin/agda", destination)
-      shutil.rmtree('.tmp')
-      os.remove(filepath)
+      if not path.exists(destination):
+        download_url(f'http://ftp.de.debian.org/debian/pool/main/a/agda/{filename}', filepath)
+        unzip(filepath)
+        os.mkdir(tmp_dir)
+        Archive(filepath).extractall(tmp_dir)
+        data_tar = path.join(tmp_dir, 'data.tar')
+        Archive(data_tar).extractall(tmp_dir)
+        shutil.move(f"{tmp_dir}/usr/bin/agda", destination)
+        shutil.rmtree(tmp_dir)
+        os.remove(filepath)
       return True
     except Exception as e:
+      log.error(f"Could not download and install: {e}")
       return False
 
   @staticmethod
-  def _get_available_versions(arch: str = "") -> list[str]:
+  def get_available_versions(arch: str = "") -> list[str]:
     if arch == "":
       arch = platform.architecture()[1]
     system = platform.system()
@@ -92,7 +94,6 @@ class VersionSwitcher:
       files = ftp.nlst()
       files = [f for f in files if 'agda-bin_' in f]
       files = [f for f in files if machine in f]
-      print(files)
       return files
     # TODO: Mac and windows support?
     # elif system = 'Darwin':
