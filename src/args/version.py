@@ -6,8 +6,7 @@ from typing import *
 
 import click
 
-from install import VersionSwitcher
-from interpret import *
+from version import VersionSwitcher
 
 CONTEXT_SETTINGS = {
   'max_content_width': 200,
@@ -16,41 +15,26 @@ CONTEXT_SETTINGS = {
 }
 
 
-# REPL commands
 @click.group(chain=True, invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
-def pkg():
-  """Manage Agda installation and packages
+def version():
+  """Manage Agda installation and switch between versions
   """
   pass
 
 
-@pkg.resultcallback()
+@version.resultcallback()
 def process_commands(processors):
   pass
 
 
-@pkg.command('switch')
-@click.option(
-  '-v',
-  '--version',
-  'version',
-  type=str,
-  multiple=False,
-  help='Version of Agda to install',
-)
-@click.option('-g',
-              '--global',
-              'globally',
-              type=bool,
-              is_flag=True,
-              multiple=False,
-              help='Install Agda globally')
+@version.command('switch')
+@click.option('-v', '--version', 'version', type=str, help='Version of Agda to install')
+@click.option('-g', '--global', 'globally', type=bool, is_flag=True, help='Install Agda globally')
 @click.option('-u',
               '--user',
               'user',
               type=bool,
               is_flag=True,
-              multiple=False,
               help='Install Agda for current user')
 def switch(version: str, globally: bool, user: bool):
   """Install new Agda version or switch between versions
@@ -70,7 +54,7 @@ def switch(version: str, globally: bool, user: bool):
   return None
 
 
-@pkg.command('list')
+@version.command('list')
 def list_versions():
   """List available Agda versions
   """
@@ -81,8 +65,8 @@ def list_versions():
   return None
 
 
-# TODO: cleanup
-# @pkg.command('uninstall')
+# TODO: cleanup installed agda versions
+# @version.command('uninstall')
 # @click.option('-v',
 #               '--version',
 #               'version',

@@ -4,8 +4,9 @@
 import click
 
 from args.agda import agda
-from args.pkg import pkg
+from args.package import pkg
 from args.repl import repl
+from args.version import version
 
 CONTEXT_SETTINGS = {
   'max_content_width': 200,
@@ -21,4 +22,5 @@ def cli():
 
 cli.add_command(repl)
 cli.add_command(agda)
+cli.add_command(version)
 cli.add_command(pkg)

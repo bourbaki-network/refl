@@ -3,5 +3,6 @@
 
 from .agda import *
 from .common import *
-from .pkg import *
+from .package import *
 from .repl import *
+from .version import *

@@ -6,6 +6,8 @@ coloredlogs==15.0
 EasyProcess==0.3
 entrypoint2==0.2.3
 file-downloader==0.5.1
+gitdb==4.0.7
+GitPython==3.1.14
 humanfriendly==9.1
 iniconfig==1.1.1
 inquirer==2.7.0
@@ -35,6 +37,7 @@ refl==0.1
 regex==2021.3.17
 scipy==1.6.2
 six==1.15.0
+smmap==4.0.0
 toml==0.10.2
 tqdm==4.59.0
 traceback2==1.4.0
