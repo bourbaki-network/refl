@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import glob
+import os
 import shutil
 import tempfile
 from os import path
@@ -30,13 +31,14 @@ ARCHIVE_TYPES = [
 class Install:
   where: str = path.join(path.expanduser("~"), ".refl")  # link / path
 
-  def __init__(self, where: str):
-    self.where = where
+  def __init__(self, where: str = None):
+    self.where = where if where is not None else self.where
 
   def git(self, url: str, head: str = None, tag: str = None, commit_hash: str = None) -> str:
+    repo_name: str = os.path.splitext(os.path.basename(url))[0]
     # set target directory of install
     if head is not None:
-      target_directory = path.join(self.where, f"{repo_name}-{head.name}")
+      target_directory = path.join(self.where, f"{repo_name}-{head}")
     elif tag is not None:
       target_directory = path.join(self.where, f"{repo_name}-{tag}")
     elif commit_hash is not None:
@@ -53,7 +55,7 @@ class Install:
 
     # check out requested head / tag / commit
     if head is not None:
-      head = [x for x in cloned_repo.heads if x.name == head]
+      head = [x for x in cloned_repo.heads if x.name == head][0]
       assert len(head) == 1, f"Head named {head} not found in the repository"
       head.checkout()
     if tag is not None:
@@ -68,7 +70,7 @@ class Install:
     return self._load_lib_file(target_directory)
 
   def local(self, location: str):
-    target_directory = path.join(self.where, f"{repo_name}")
+    target_directory = path.join(self.where, f"{location}")
     if self.installed(target_directory):
       return self._load_lib_file(target_directory)
 

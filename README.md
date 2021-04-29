@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of Contents
+
+- [refl](#refl)
+  - [Install](#install)
+- [Agda switcher](#agda-switcher)
+  - [Install a new version of Agda](#install-a-new-version-of-agda)
+  - [List available versions of Agda](#list-available-versions-of-agda)
+- [Package manager](#package-manager)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # refl
 
 A swiss army knife for working with [Agda](https://github.com/agda/agda).
@@ -6,9 +19,7 @@ A swiss army knife for working with [Agda](https://github.com/agda/agda).
   - [Install](#install)
 - [Agda switcher](#agda-switcher)
   - [Install a new version of Agda](#install-a-new-version-of-agda)
-  - [List installed versions of Agda](#list-installed-versions-of-agda)
-  - [Switch between different versions](#switch-between-different-versions)
-  - [Remove an installed version](#remove-an-installed-version)
+  - [List available versions of Agda](#list-available-versions-of-agda)
 - [Package manager](#package-manager)
 
 ## Install
@@ -32,25 +43,21 @@ pip install refl --user
 ## Install a new version of Agda
 
 ```bash
-refl install
+refl version switch
 ```
 
-## List installed versions of Agda
+## List available versions of Agda
 
 ```bash
-refl list installed
-```
-
-## Switch between different versions
-
-```bash
-refl switch
-```
-
-## Remove an installed version
-
-```bash
-refl remove
+refl version list
 ```
 
 # Package manager
+
+```
+python ./src/refl.py pkg install \
+  --git \
+  --url git@github.com:bourbaki-network/backend.git \
+  --commit_hash  10bbc29ffa385db156b2d4f6884a2d3f8d02338c \
+  --pwd
+```
