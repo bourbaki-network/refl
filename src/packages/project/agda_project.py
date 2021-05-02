@@ -9,7 +9,7 @@ import yaml
 from yaml import CLoader as Loader
 
 from packages.common import LocalOptions, Origin
-from packages.package import Package
+from packages.package.package import Package
 
 
 @dataclass

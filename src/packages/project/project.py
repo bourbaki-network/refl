@@ -3,8 +3,8 @@
 
 from typing import *
 
-from packages.agda_project import AgdaProject
-from packages.refl_project import ReflProject
+from packages.project.agda_project import AgdaProject
+from packages.project.refl_project import ReflProject
 from util.log import LOGLEVEL, Logging
 
 log = Logging(LOGLEVEL)()
@@ -18,7 +18,5 @@ class Project:
     try:
       self.project = AgdaProject(file)()
     except Exception as e:
-      log.warning(
-        f"Failed to parse project as a native Agda project, retrying as a refl project instead {e}"
-      )
+      log.warning(f"Failed to parse project as a native Agda project, retrying as a refl project instead {e}")
       self.project = ReflProject(file)()

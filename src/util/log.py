@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import os
-import sys
-from logging.handlers import RotatingFileHandler
 from typing import *
 
 import coloredlogs
@@ -12,10 +9,9 @@ import coloredlogs
 from config import *
 
 
-def logger(logPath: str = LOGGING, fileName: str = LOGFILE, level: str = 'DEBUG'):
+def logger(level: str = 'DEBUG'):
 
-  logFormatter: Any = logging.Formatter(
-    "%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
+  logFormatter: Any = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
   logger: Any = logging.getLogger(__name__)
   logger.setLevel(getattr(logging, level.upper()))
 

@@ -14,7 +14,7 @@ from git import Repo
 from pyunpack import Archive
 from tqdm import tqdm
 
-from packages.project import Project
+from packages.project.project import Project
 
 ARCHIVE_TYPES = [
   "application/x-lzip",

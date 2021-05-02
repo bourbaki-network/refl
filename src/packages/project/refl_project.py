@@ -7,7 +7,7 @@ from typing import *
 import yaml
 from yaml import CLoader as Loader
 
-from packages.package import Package
+from packages.package.package import Package
 
 
 @dataclass
