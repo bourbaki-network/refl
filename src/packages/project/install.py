@@ -14,6 +14,8 @@ from git import Repo
 from pyunpack import Archive
 from tqdm import tqdm
 
+from packages.project import Project
+
 ARCHIVE_TYPES = [
   "application/x-lzip",
   "application/x-unix-archive",
@@ -28,13 +30,22 @@ ARCHIVE_TYPES = [
 ]
 
 
-class Install:
+class Install(Project):
   where: str = path.join(path.expanduser("~"), ".refl")  # link / path
 
-  def __init__(self, where: str = None):
+  def __init__(self, file: str, where: str = None):
     self.where = where if where is not None else self.where
+    super(Install, self).__init__(file)
 
-  def git(self, url: str, head: str = None, tag: str = None, commit_hash: str = None) -> str:
+  def install(self):
+    for dependency in self.project.dependencies:
+      opts = dependency.options
+      if dependency.origin == Origin.GIT:
+        self._git(opts.git_url, opts.head, opts.tag, opts.commit_hash)
+      elif dependency.origin == Origin.LOCAL:
+        self._local(opts.local_url, dependency.name)
+
+  def _git(self, url: str, head: str = None, tag: str = None, commit_hash: str = None) -> str:
     repo_name: str = os.path.splitext(os.path.basename(url))[0]
     # set target directory of install
     if head is not None:
@@ -69,7 +80,7 @@ class Install:
     shutil.move(target_directory)
     return self._load_lib_file(target_directory)
 
-  def local(self, location: str):
+  def _local(self, location: str):
     target_directory = path.join(self.where, f"{location}")
     if self.installed(target_directory):
       return self._load_lib_file(target_directory)
@@ -91,7 +102,7 @@ class Install:
 
     return lib_file[0]
 
-  def remote(self, url: str, identifier: str):
+  def _remote(self, url: str, identifier: str):
     target_directory = path.join(self.where, f"{identifier}")
     if self.installed(target_directory):
       return self._load_lib_file(target_directory)

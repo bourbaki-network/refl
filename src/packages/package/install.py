@@ -7,14 +7,14 @@ from urllib.parse import urlparse
 
 from packages.agda_lib import AgdaLib
 from packages.common import Kind, Origin
-from packages.install import Install
+from packages.install import Install as InstallPackage
 from util.log import LOGLEVEL, Logging
 
 PackageMetadata = Union[AgdaLib]
 log = Logging(LOGLEVEL)()
 
 
-class Package:
+class Install:
   origin: Origin = Origin.local
   kind: Kind = Kind.user
   where: str = path.join(path.expanduser("~"), ".refl")  # link / path
@@ -29,20 +29,20 @@ class Package:
     self.where = where if where is not None else self.where
 
   def git(self, url: str, head: str = None, tag: str = None, commit_hash: str = None):
-    install = Install(self.where)
+    install = InstallPackage(self.where)
     lib = install.git(url, head, tag, commit_hash)
     # TODO: add a better alternative config file
     self.meta = AgdaLib(lib)()
     return self
 
   def local(self, location: str):
-    install = Install(self.where)
+    install = InstallPackage(self.where)
     lib = install.local(location)
     self.meta = AgdaLib(lib)()
     return self
 
   def remote(self, url: str):
-    install = Install(self.where)
+    install = InstallPackage(self.where)
     lib = install.remote(url)
     self.meta = AgdaLib(lib)()
     return self
