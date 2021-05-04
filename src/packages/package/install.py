@@ -1,85 +1,79 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# #!/usr/bin/env python3
-# # -*- coding: utf-8 -*-
 
-# from os import path
-# from typing import *
-# from urllib.parse import urlparse
+from typing import *
 
-# from packages.project.agda_project import AgdaProject
-# from packages.common import Kind, Origin
-# from packages.package.install import Install as InstallPackage
-# from util.log import LOGLEVEL, Logging
+from packages.common import GitOptions, LocalOptions, Origin
+from packages.package.package import Package
+from util.log import Logging
 
-# PackageMetadata = Union[AgdaProject]
-# log = Logging(LOGLEVEL)()
+log = Logging()()
 
-# class Install:
-#   origin: Origin = Origin.local
-#   kind: Kind = Kind.user
-#   where: str = path.join(path.expanduser("~"), ".refl")  # link / path
-#   meta: PackageMetadata = None
 
-#   def __init__(self, origin: str = "git", kind: str = "user", where: str = None):
-#     assert isinstance(origin, Origin), f"Unknown package origin {origin}"
-#     assert isinstance(kind, Kind), f"Unknown package kind {kind}"
+class Install(Package):
+  def __init__(
+    self,
+    name: str,
+    version: str,
+    description: str,
+    # Where to get this package from
+    origin: Origin,
+    options: Union[GitOptions, LocalOptions],
+    # Package's source directories to include
+    source_dir: Optional[List[str]] = None,
+    # Dependencies
+    agda_version: Optional[str] = None,
+    dependencies: Optional[List['Package']] = None,
+    # Docs
+    readme: Optional[str] = None,
+    author: Optional[str] = None,
+    author_email: Optional[str] = None,
+    license: Optional[str] = None,
+    # Tags
+    tags: Optional[List[str]] = None,
+    # Before and after install scripts
+    install_script: Optional[str] = None,
+    uninstall_script: Optional[str] = None,
+  ):
+    self.name = name
+    self.version = version
+    self.description = description
 
-#     self.origin = origin
-#     self.kind = kind
-#     self.where = where if where is not None else self.where
+    self.origin = origin
+    self.options = options
 
-#   def git(self, url: str, head: str = None, tag: str = None, commit_hash: str = None):
-#     install = InstallPackage(self.where)
-#     lib = install.git(url, head, tag, commit_hash)
-#     # TODO: add a better alternative config file
-#     self.meta = AgdaProject(lib)()
-#     return self
+    self.source_dir = source_dir
 
-#   def local(self, location: str):
-#     install = InstallPackage(self.where)
-#     lib = install.local(location)
-#     self.meta = AgdaProject(lib)()
-#     return self
+    self.agda_version = agda_version
+    self.dependencies = dependencies
 
-#   def remote(self, url: str):
-#     install = InstallPackage(self.where)
-#     lib = install.remote(url)
-#     self.meta = AgdaProject(lib)()
-#     return self
+    self.readme = readme
+    self.author = author
+    self.author_email = author_email
+    self.license = license
 
-#   def search(self, name: str):
-#     raise NotImplementedError("Search functionality is TODO")
+    self.tags = tags
 
-#   def publish(self, name: str, location: str):
-#     raise NotImplementedError("No central repo to publish to yet")
+    self.install_script = install_script
+    self.uninstall_script = uninstall_script
 
-#   def install_dependencies(self, meta: PackageMetadata):
-#     assert self.meta is not None, "Cannot install dependencies before parsing main package file"
-#     if isinstance(self.meta, AgdaProject):
-#       deps = []
-#       for dep in self.dependencies:
-#         # Try to guess the dependency type, if git, URL or local, try to fetch else give up
-#         try:
-#           kind_of_url = urlparse(dep)
-#           if kind_of_url.scheme == "git":
-#             origin = Origin.git
-#           elif kind_of_url.scheme == "http" or kind_of_url.scheme == "https":
-#             origin = Origin.remote
-#           elif path.exists(dep):
-#             origin = Origin.local
-#           else:
-#             raise Exception(f"Could not detect URL type of dependency {kind_of_url}")
+  def __call__(self):
+    opts = self.options
+    if type(opts) == GitOptions:
+      self._git(opts.git_url, opts.head, opts.tag, opts.commit_hash)
+    elif type(opts) == LocalOptions:
+      self._local(opts.location)
+    elif type(opts) == RemoteOptions:
+      self._remote(opts.url)
 
-#           dependency = {"url": dep, "origin": origin}
-#           deps.append(dependency)
-#         except Exception as e:
-#           log.warning(f"Could not detect URL type of dependency {dependency}")
+  def _git(self, url: str, head: str = None, tag: str = None, commit_hash: str = None):
 
-#       for dep in deps:
-#         p = Package(dep["origin"], self.kind, self.where)
-#         if self.kind == Kind.git:
-#           p.git(dep["url"])
-#         elif self.kind == Kind.remote:
-#           p.remote(dep["url"])
-#         elif self.origin == Kind.local:
-#           p.local(dep["url"])
+    return self
+
+  def _local(self, location: str):
+
+    return self
+
+  def _remote(self, url: str):
+
+    return self

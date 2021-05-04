@@ -30,3 +30,8 @@ class GitOptions:
 @dataclass
 class LocalOptions:
   local_url: str
+
+
+@dataclass
+class RemoteOptions:
+  url: str
