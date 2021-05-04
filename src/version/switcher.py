@@ -50,6 +50,19 @@ class VersionSwitcher:
       destination = f"{self.root}/{version.replace('.deb', '')}"
       self._switch(destination)
 
+  def uninstall(self):
+    questions = [
+      inquirer.List(
+        'version',
+        message="Which version would you like to install?",
+        choices=[x.replace('.deb', '') for x in self.get_available_versions()],
+      )
+    ]
+    version = inquirer.prompt(questions)
+    version = version['version']
+    destination = f"{self.root}/{version}"
+    os.remove(destination)
+
   def _switch(self, to: str):
     log.info(f"Switching Agda version to {to}")
     executable_path = path.join(self.install_root, 'agda')
