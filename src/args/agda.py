@@ -6,8 +6,8 @@ from typing import IO
 
 import click
 
-from args.commands import *
-from args.commands import Range
+from commands import *
+from commands import Range
 from interpret import *
 
 CONTEXT_SETTINGS = {

@@ -4,6 +4,7 @@
 import os
 import platform
 import shutil
+import subprocess
 from ftplib import FTP
 from os import path
 from typing import *
@@ -51,12 +52,15 @@ class VersionSwitcher:
 
   def _switch(self, to: str):
     log.info(f"Switching Agda version to {to}")
-    final_path = path.join(self.install_root, 'agda')
+    executable_path = path.join(self.install_root, 'agda')
     try:
-      os.remove(final_path)
+      os.remove(executable_path)
     except Exception as e:
-      log.error(f'Path {final_path} does not exist')
-    os.symlink(path.abspath(to), final_path)
+      log.error(f'Path {executable_path} does not exist')
+
+    # Linux only
+    os.symlink(path.abspath(to), executable_path)
+    subprocess.check_call(['chmod', '+x', path.abspath(to)])
 
   def _download(self, filename: str) -> bool:
     try:
@@ -89,7 +93,7 @@ class VersionSwitcher:
       machine = 'amd64'
 
     if system == 'Linux':
-      ftp = FTP('ftp.us.debian.org')
+      ftp = FTP('ftp.us.debian.org', timeout=2)
       ftp.login()
       ftp.cwd('debian/pool/main/a/agda/')
       files = ftp.nlst()
