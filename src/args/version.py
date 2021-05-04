@@ -30,12 +30,7 @@ def process_commands(processors):
 @version.command('switch')
 @click.option('-v', '--version', 'version', type=str, help='Version of Agda to install')
 @click.option('-g', '--global', 'globally', type=bool, is_flag=True, help='Install Agda globally')
-@click.option('-u',
-              '--user',
-              'user',
-              type=bool,
-              is_flag=True,
-              help='Install Agda for current user')
+@click.option('-u', '--user', 'user', type=bool, is_flag=True, help='Install Agda for current user')
 def switch(version: str, globally: bool, user: bool):
   """Install new Agda version or switch between versions
   """

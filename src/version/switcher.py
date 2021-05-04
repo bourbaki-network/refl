@@ -6,6 +6,7 @@ import platform
 import shutil
 from ftplib import FTP
 from os import path
+from typing import *
 
 import inquirer
 from pyunpack import Archive
@@ -21,7 +22,7 @@ class VersionSwitcher:
     self.root = root
     self.install_root = install_root
 
-  def latest(self) -> str:
+  def latest(self) -> Optional[str]:
     versions = self.get_available_versions()
     versions.reverse()
 

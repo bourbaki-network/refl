@@ -3,7 +3,7 @@
 
 import glob
 import os
-import shutil
+# import shutil
 import tempfile
 from os import path
 from typing import *
@@ -66,18 +66,18 @@ class Install(Project):
 
     # check out requested head / tag / commit
     if head is not None:
-      head = [x for x in cloned_repo.heads if x.name == head][0]
+      head_ = [x for x in cloned_repo.heads if x.name == head]
       assert len(head) == 1, f"Head named {head} not found in the repository"
-      head.checkout()
+      head_[0].checkout()
     if tag is not None:
-      tag = [x for x in cloned_repo.tags if x.name == tag]
+      tag_ = [x for x in cloned_repo.tags if x.name == tag]
       assert len(tag) == 1, f"Tag named {tag} not found in the repository"
-      commit_hash = tag.commit.hexsha
+      commit_hash = tag_[0].commit.hexsha
     if commit_hash is not None:
       cloned_repo.git.checkout(hash)
 
     # move directory to `where`
-    shutil.move(target_directory)
+    # shutil.move(target_directory, )
     return self._load_lib_file(target_directory)
 
   def _local(self, location: str):
@@ -98,7 +98,7 @@ class Install(Project):
     assert len(lib_file) == 0, ".agda-lib file missing from library root"
 
     # move directory to `where`
-    shutil.move(target_directory)
+    # shutil.move(target_directory)
 
     return lib_file[0]
 
@@ -129,13 +129,13 @@ class Install(Project):
       assert len(lib_file) == 0, ".agda-lib file missing from library root"
 
       # move directory to `where`
-      shutil.move(target_directory)
+      # shutil.move(target_directory)
 
       return lib_file[0]
 
   def _load_lib_file(self, directory: str) -> str:
     # check if there exists a ".agda-lib" file
-    lib_file = glob.glob(path.join(tmpdir, "*.agda-lib"))
+    lib_file = glob.glob(path.join(directory, "*.agda-lib"))
     assert len(lib_file) == 0, ".agda-lib file missing from library root"
     return lib_file[0]
 

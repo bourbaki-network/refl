@@ -36,7 +36,7 @@ def unzip(fname: str):
 def run(cmd: str, cwd: str) -> int:
   ret = -1
   try:
-    ret = subprocess.run(cmd, cwd=cwd, shell=True, stderr=subprocess.STDOUT)
+    ret = subprocess.run(cmd, cwd=cwd, shell=True, stderr=subprocess.STDOUT).returncode
   except subprocess.CalledProcessError as e:
     pass
   return ret
