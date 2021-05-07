@@ -56,7 +56,7 @@ def install(
   """Install package
   """
   name = git_parse(url).repo if name is None else name
-  target_location = os.path.expanduser("~")
+  target_location = os.path.join(os.path.expanduser("~"), ".refl")
   if global_install:
     target_location = "/usr/lib/refl"
   if pwd:

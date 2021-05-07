@@ -8,19 +8,19 @@
   - [Install a new version of Agda](#install-a-new-version-of-agda)
   - [List available versions of Agda](#list-available-versions-of-agda)
 - [Package manager](#package-manager)
+  - [Install package](#install-package)
+    - [In present working directory](#in-present-working-directory)
+    - [For current user](#for-current-user)
+    - [Globally](#globally)
+    - [From git with specific commit hash](#from-git-with-specific-commit-hash)
+    - [From git with specific tag](#from-git-with-specific-tag)
+    - [From git with specific commit head or branch](#from-git-with-specific-commit-head-or-branch)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # refl
 
 A swiss army knife for working with [Agda](https://github.com/agda/agda).
-
-- [refl](#refl)
-  - [Install](#install)
-- [Agda switcher](#agda-switcher)
-  - [Install a new version of Agda](#install-a-new-version-of-agda)
-  - [List available versions of Agda](#list-available-versions-of-agda)
-- [Package manager](#package-manager)
 
 ## Install
 
@@ -54,10 +54,52 @@ refl version list
 
 # Package manager
 
+## Install package
+
+### In present working directory
+
+```bash
+refl pkg install --git --url git@github.com:marcelosousa/smtlib.git --pwd
 ```
-python ./src/refl.py pkg install \
+
+### For current user
+
+```bash
+refl pkg install --git --url git@github.com:marcelosousa/smtlib.git --user
+```
+
+### Globally
+
+```bash
+refl pkg install --git --url git@github.com:marcelosousa/smtlib.git --global
+```
+
+### From git with specific commit hash
+
+```bash
+refl pkg install \
   --git \
-  --url git@github.com:bourbaki-network/backend.git \
-  --commit_hash  10bbc29ffa385db156b2d4f6884a2d3f8d02338c \
+  --url git@github.com:marcelosousa/smtlib.git \
+  --commit_hash c152c6fe59a0546c88e048f1ea50d193b997ef15 \
+  --pwd
+```
+
+### From git with specific tag
+
+```bash
+refl pkg install \
+  --git \
+  --url git@github.com:gallais/agdarsec.git \
+  --tag v0.3.0 \
+  --pwd
+```
+
+### From git with specific commit head or branch
+
+```bash
+refl pkg install \
+  --git \
+  --url git@github.com:pcapriotti/agda-base.git \
+  --head computational-isos \
   --pwd
 ```
