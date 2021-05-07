@@ -21,7 +21,6 @@ class Kind(Enum):
 @dataclass
 class GitOptions:
   git_url: str
-  https_url: Optional[str]
   head: Optional[str]
   commit_hash: Optional[str]
   tag: Optional[str]

@@ -19,14 +19,9 @@ def logger(level: str = 'DEBUG'):
 
 
 class Logging:
-  def __init__(self: Any, level: str = 'info'):
+  def __init__(self: Any, level: str = 'DEBUG'):
     self.logger = logger(level)
-
-    coloredlogs.install(level='DEBUG', logger=self.logger)
-    coloredlogs.install(level='INFO', logger=self.logger)
-    coloredlogs.install(level='WARNING', logger=self.logger)
-    coloredlogs.install(level='ERROR', logger=self.logger)
-    coloredlogs.install(level='CRITICAL', logger=self.logger)
+    coloredlogs.install(logger=self.logger)
 
   def __call__(self: Any):
     return self.logger

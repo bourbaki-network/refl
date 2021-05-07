@@ -4,8 +4,9 @@
 import os
 
 import click
+from giturlparse import parse as git_parse
 
-# from packages.install import Install
+from packages import GitOptions, InstallPackage, LocalOptions, Origin, RemoteOptions
 
 CONTEXT_SETTINGS = {
   'max_content_width': 200,
@@ -22,6 +23,7 @@ def pkg():
 
 
 @pkg.command('install')
+@click.option('-n', '--name', 'name', type=str, help='Name of the package')
 @click.option('-g', '--git', 'git', type=bool, is_flag=True, help='Install this package from git')
 @click.option('-l', '--local', 'local', type=bool, is_flag=True, help='Install this package from a local directory')
 @click.option('-r', '--remote', 'remote', type=bool, is_flag=True, help='Install this package after downloading as an archive')
@@ -36,6 +38,7 @@ def pkg():
 @click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
 @click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
 def install(
+  name: str,
   git: bool = False,
   local: bool = False,
   remote: bool = False,
@@ -52,13 +55,26 @@ def install(
 ):
   """Install package
   """
+  name = git_parse(url).repo if name is None else name
   target_location = os.path.expanduser("~")
   if global_install:
     target_location = "/usr/lib/refl"
   if pwd:
     target_location = "./.refl"
 
-  # i = Install(target_location)
+  if git:
+    origin = Origin.GIT
+    options = GitOptions(git_url=url, head=head, commit_hash=commit_hash, tag=tag)
+  elif local:
+    origin = Origin.LOCAL
+    options = LocalOptions(local_url=location)
+  elif remote:
+    origin = Origin.REMOTE
+    options = RemoteOptions(url=path)
+
+  i = InstallPackage(name=name, origin=origin, options=options)
+
+  i(target_location)
 
 
 @pkg.command('uninstall')
