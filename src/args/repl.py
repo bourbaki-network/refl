@@ -31,12 +31,7 @@ def repl_process_commands(processors):
 
 @repl.command('agda')
 @click.option('-p', '--prelude', 'prelude', type=str, multiple=False, help='File to load as prelude to the REPL')
-@click.option('-i',
-              '--include-path',
-              'includes',
-              type=list[str],
-              multiple=True,
-              help='Directories to look for including modules')
+@click.option('-i', '--include-path', 'includes', type=list[str], multiple=True, help='Directories to look for including modules')
 @click.option('-l', '--library', 'library', type=str, multiple=False, help='Use library in directory')
 def agda(prelude: str, includes: list[str], library: str):
   """Start an Agda REPL.

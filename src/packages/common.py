@@ -7,15 +7,15 @@ from typing import *
 
 
 class Origin(Enum):
-  git = 1
-  local = 2
-  remote = 3
+  GIT = 1
+  LOCAL = 2
+  REMOTE = 3
 
 
 class Kind(Enum):
-  user = 1
-  everyone = 2
-  local = 3
+  USER = 1
+  EVERYONE = 2
+  LOCAL = 3
 
 
 @dataclass

@@ -104,8 +104,7 @@ class Commands:
 
   def load(self: Any, cmds: List[str]) -> str:
 
-    command = 'Cmd_load "{src}" [{commands}]'.format(src=self.srcFile,
-                                                     commands=','.join(["\"" + c + "\"" for c in cmds]))
+    command = 'Cmd_load "{src}" [{commands}]'.format(src=self.srcFile, commands=','.join(["\"" + c + "\"" for c in cmds]))
 
     self.history.append(command)
     return self.wrap(command)
@@ -149,11 +148,7 @@ class Commands:
     self.history.append(command)
     return self.wrap(command)
 
-  def solveOne(self: Any,
-               rewrite: str = 'Simplified',
-               interactionId: int = 0,
-               where: Range = Range(),
-               expr: str = '') -> str:
+  def solveOne(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
 
@@ -173,18 +168,14 @@ class Commands:
 
   def autoOne(self: Any, interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
 
-    command = 'Cmd_autoOne {interactionId} {where} "{expr}"'.format(interactionId=str(interactionId),
-                                                                    where=where(),
-                                                                    expr=expr)
+    command = 'Cmd_autoOne {interactionId} {where} "{expr}"'.format(interactionId=str(interactionId), where=where(), expr=expr)
 
     self.history.append(command)
     return self.wrap(command)
 
   def auto(self: Any, interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
 
-    command = 'Cmd_auto {interactionId} {where} "{expr}"'.format(interactionId=str(interactionId),
-                                                                 where=where(),
-                                                                 expr=expr)
+    command = 'Cmd_auto {interactionId} {where} "{expr}"'.format(interactionId=str(interactionId), where=where(), expr=expr)
 
     self.history.append(command)
     return self.wrap(command)
@@ -224,9 +215,7 @@ class Commands:
 
   def highlight(self: Any, interactionId: int = 0, where: Range = Range()) -> str:
 
-    command = 'Cmd_highlight {interactionId} {where} "{src}"'.format(interactionId=str(interactionId),
-                                                                     where=where(),
-                                                                     src=self.srcFile)
+    command = 'Cmd_highlight {interactionId} {where} "{src}"'.format(interactionId=str(interactionId), where=where(), src=self.srcFile)
 
     self.history.append(command)
     return self.wrap(command)
@@ -236,10 +225,7 @@ class Commands:
         force + ' should be on of ' + ', '.join(useForce)
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_give {force} {interactionId} {where} "{src}"'.format(force=force,
-                                                                        interactionId=str(interactionId),
-                                                                        where=where(),
-                                                                        src=expr)
+    command = 'Cmd_give {force} {interactionId} {where} "{src}"'.format(force=force, interactionId=str(interactionId), where=where(), src=expr)
 
     self.history.append(command)
     return self.wrap(command)
@@ -247,9 +233,7 @@ class Commands:
   def refine(self: Any, interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_refine {interactionId} {where} "{src}"'.format(interactionId=str(interactionId),
-                                                                  where=where(),
-                                                                  src=expr)
+    command = 'Cmd_refine {interactionId} {where} "{src}"'.format(interactionId=str(interactionId), where=where(), src=expr)
 
     self.history.append(command)
     return self.wrap(command)
@@ -268,34 +252,25 @@ class Commands:
   def refine_or_intro(self: Any, whether: bool, interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_refine_or_intro {whether} {interactionId} {where} "{src}"'.format(
-      whether='True' if whether else 'False', interactionId=str(interactionId), where=where(), src=expr)
+    command = 'Cmd_refine_or_intro {whether} {interactionId} {where} "{src}"'.format(whether='True' if whether else 'False',
+                                                                                     interactionId=str(interactionId),
+                                                                                     where=where(),
+                                                                                     src=expr)
 
     self.history.append(command)
     return self.wrap(command)
 
-  def context(self: Any,
-              rewrite: str = 'Simplified',
-              interactionId: int = 0,
-              where: Range = Range(),
-              expr: str = '') -> str:
+  def context(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_context {rewrite} {interactionId} {where} "{src}"'.format(rewrite=rewrite,
-                                                                             interactionId=interactionId,
-                                                                             where=where(),
-                                                                             src=expr)
+    command = 'Cmd_context {rewrite} {interactionId} {where} "{src}"'.format(rewrite=rewrite, interactionId=interactionId, where=where(), src=expr)
 
     self.history.append(command)
     return self.wrap(command)
 
-  def helper_function(self: Any,
-                      rewrite: str = 'Simplified',
-                      interactionId: int = 0,
-                      where: Range = Range(),
-                      expr: str = '') -> str:
+  def helper_function(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
     expr = expr if expr != '' else self.srcFile
@@ -308,45 +283,27 @@ class Commands:
     self.history.append(command)
     return self.wrap(command)
 
-  def infer(self: Any,
-            rewrite: str = 'Simplified',
-            interactionId: int = 0,
-            where: Range = Range(),
-            expr: str = '') -> str:
+  def infer(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_infer {rewrite} {interactionId} {where} "{src}"'.format(rewrite=rewrite,
-                                                                           interactionId=interactionId,
-                                                                           where=where(),
-                                                                           src=expr)
+    command = 'Cmd_infer {rewrite} {interactionId} {where} "{src}"'.format(rewrite=rewrite, interactionId=interactionId, where=where(), src=expr)
 
     self.history.append(command)
     return self.wrap(command)
 
-  def goal_type(self: Any,
-                rewrite: str = 'Simplified',
-                interactionId: int = 0,
-                where: Range = Range(),
-                expr: str = '') -> str:
+  def goal_type(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_goal_type {rewrite} {interactionId} {where} "{src}"'.format(rewrite=rewrite,
-                                                                               interactionId=interactionId,
-                                                                               where=where(),
-                                                                               src=expr)
+    command = 'Cmd_goal_type {rewrite} {interactionId} {where} "{src}"'.format(rewrite=rewrite, interactionId=interactionId, where=where(), src=expr)
 
     self.history.append(command)
     return self.wrap(command)
 
-  def elaborate_give(self: Any,
-                     rewrite: str = 'Simplified',
-                     interactionId: int = 0,
-                     where: Range = Range(),
-                     expr: str = '') -> str:
+  def elaborate_give(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
     expr = expr if expr != '' else self.srcFile
@@ -359,11 +316,7 @@ class Commands:
     self.history.append(command)
     return self.wrap(command)
 
-  def goal_type_context(self: Any,
-                        rewrite: str = 'Simplified',
-                        interactionId: int = 0,
-                        where: Range = Range(),
-                        expr: str = '') -> str:
+  def goal_type_context(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
     expr = expr if expr != '' else self.srcFile
@@ -376,41 +329,33 @@ class Commands:
     self.history.append(command)
     return self.wrap(command)
 
-  def goal_type_context_infer(self: Any,
-                              rewrite: str = 'Simplified',
-                              interactionId: int = 0,
-                              where: Range = Range(),
-                              expr: str = '') -> str:
+  def goal_type_context_infer(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_goal_type_context_infer {rewrite} {interactionId} {where} "{src}"'.format(
-      rewrite=rewrite, interactionId=interactionId, where=where(), src=expr)
+    command = 'Cmd_goal_type_context_infer {rewrite} {interactionId} {where} "{src}"'.format(rewrite=rewrite,
+                                                                                             interactionId=interactionId,
+                                                                                             where=where(),
+                                                                                             src=expr)
 
     self.history.append(command)
     return self.wrap(command)
 
-  def goal_type_context_check(self: Any,
-                              rewrite: str = 'Simplified',
-                              interactionId: int = 0,
-                              where: Range = Range(),
-                              expr: str = '') -> str:
+  def goal_type_context_check(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_goal_type_context_check {rewrite} {interactionId} {where} "{src}"'.format(
-      rewrite=rewrite, interactionId=interactionId, where=where(), src=expr)
+    command = 'Cmd_goal_type_context_check {rewrite} {interactionId} {where} "{src}"'.format(rewrite=rewrite,
+                                                                                             interactionId=interactionId,
+                                                                                             where=where(),
+                                                                                             src=expr)
 
     self.history.append(command)
     return self.wrap(command)
 
-  def show_module_contents(self: Any,
-                           rewrite: str = 'Simplified',
-                           interactionId: int = 0,
-                           where: Range = Range(),
-                           expr: str = '') -> str:
+  def show_module_contents(self: Any, rewrite: str = 'Simplified', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert rewrite in rewriteModes, \
         rewrite + ' should be on of ' + ', '.join(rewriteModes)
     expr = expr if expr != '' else self.srcFile
@@ -426,9 +371,7 @@ class Commands:
   def make_case(self: Any, interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_make_case {interactionId} {where} "{src}"'.format(interactionId=interactionId,
-                                                                     where=where(),
-                                                                     src=expr)
+    command = 'Cmd_make_case {interactionId} {where} "{src}"'.format(interactionId=interactionId, where=where(), src=expr)
 
     self.history.append(command)
     return self.wrap(command)
@@ -436,18 +379,12 @@ class Commands:
   def why_in_scope(self: Any, interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     expr = expr if expr != '' else self.srcFile
 
-    command = 'Cmd_why_in_scope {interactionId} {where} "{src}"'.format(interactionId=interactionId,
-                                                                        where=where(),
-                                                                        src=expr)
+    command = 'Cmd_why_in_scope {interactionId} {where} "{src}"'.format(interactionId=interactionId, where=where(), src=expr)
 
     self.history.append(command)
     return self.wrap(command)
 
-  def compute(self: Any,
-              computeMode: str = 'DefaultCompute',
-              interactionId: int = 0,
-              where: Range = Range(),
-              expr: str = '') -> str:
+  def compute(self: Any, computeMode: str = 'DefaultCompute', interactionId: int = 0, where: Range = Range(), expr: str = '') -> str:
     assert computeMode in computeModes, \
         computeMode + ' should be on of ' + ', '.join(computeModes)
     expr = expr if expr != '' else self.srcFile

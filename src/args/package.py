@@ -24,12 +24,7 @@ def pkg():
 @pkg.command('install')
 @click.option('-g', '--git', 'git', type=bool, is_flag=True, help='Install this package from git')
 @click.option('-l', '--local', 'local', type=bool, is_flag=True, help='Install this package from a local directory')
-@click.option('-r',
-              '--remote',
-              'remote',
-              type=bool,
-              is_flag=True,
-              help='Install this package after downloading as an archive')
+@click.option('-r', '--remote', 'remote', type=bool, is_flag=True, help='Install this package after downloading as an archive')
 @click.option('-u', '--url', 'url', type=str, help='Git: url of the git repository')
 @click.option('-h', '--head', 'head', type=str, help='Git: head of the git repository')
 @click.option('-t', '--tag', 'tag', type=str, help='Git: tag of the git repository')
@@ -38,12 +33,7 @@ def pkg():
 @click.option('-g', '--path', 'path', type=str, help='Remote: URL of the remote package')
 @click.option('-g', '--identifier', 'identifier', type=str, help='Remote: Name / identifier of the package')
 @click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
-@click.option('-g',
-              '--global',
-              'global_install',
-              is_flag=True,
-              type=bool,
-              help='Install globally, typically at /usr/lib/refl')
+@click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
 @click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
 def install(
   git: bool = False,

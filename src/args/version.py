@@ -80,17 +80,3 @@ def list_versions():
   print('Versions available:')
   [print(v.replace('.deb', '')) for v in versions]
   return None
-
-
-# TODO: cleanup installed agda versions
-# @version.command('uninstall')
-# @click.option('-v',
-#               '--version',
-#               'version',
-#               type=str,
-#               multiple=False,
-#               help='Version of Agda to uninstall')
-# def uninstall(prelude: str, includes: list[str], library: str):
-#   """Uninstall Agda locally
-#   """
-#   return None

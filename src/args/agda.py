@@ -45,10 +45,7 @@ def cli_process_commands(processors):
   commands = [p[0] for p in processors]
   args = [p[1] for p in processors]
 
-  cs = [
-    getattr(cmds, c)(**a) if hasattr(cmds, c) else Exception('Wrong command perhaps: ' + c)
-    for c, a in list(zip(commands, args))
-  ]
+  cs = [getattr(cmds, c)(**a) if hasattr(cmds, c) else Exception('Wrong command perhaps: ' + c) for c, a in list(zip(commands, args))]
 
   repl.run(cs)
 
@@ -131,11 +128,7 @@ def solveAll_cmd(file: IO[str], rewrite: str = 'Simplified', expr: str = ''):
 @click.option('-e', '--expr', 'expr', type=str, default='', help=expr_help)
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
-def solveOne_cmd(file: IO[str],
-                 rewrite: str = 'Simplified',
-                 interactionId: int = 0,
-                 where: Range = None,
-                 expr: str = ''):
+def solveOne_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Solve one constraint in a given expression.
   """
   return ('solveOne', {'file': file, 'rewrite': rewrite, 'expr': expr, 'interactionId': interactionId, 'where': where})
@@ -270,11 +263,7 @@ def refine_or_intro_cmd(file: IO[str], whether: bool, interactionId: int = 0, wh
 @click.option('-e', '--expr', 'expr', type=str, default='', help=expr_help)
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
-def context_cmd(file: IO[str],
-                rewrite: str = 'Simplified',
-                interactionId: int = 0,
-                where: Range = None,
-                expr: str = ''):
+def context_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Context of the goal.
   """
   return ('context', {'file': file, 'rewrite': rewrite, 'expr': expr, 'interactionId': interactionId, 'where': where})
@@ -286,20 +275,10 @@ def context_cmd(file: IO[str],
 @click.option('-e', '--expr', 'expr', type=str, default='', help=expr_help)
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
-def helper_function_cmd(file: IO[str],
-                        rewrite: str = 'Simplified',
-                        interactionId: int = 0,
-                        where: Range = None,
-                        expr: str = ''):
+def helper_function_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Create type of application of new helper function that would solve the goal.
   """
-  return ('helper_function', {
-    'file': file,
-    'rewrite': rewrite,
-    'expr': expr,
-    'interactionId': interactionId,
-    'where': where
-  })
+  return ('helper_function', {'file': file, 'rewrite': rewrite, 'expr': expr, 'interactionId': interactionId, 'where': where})
 
 
 @agda.command('infer')
@@ -320,11 +299,7 @@ def infer_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0
 @click.option('-e', '--expr', 'expr', type=str, default='', help=expr_help)
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
-def goal_type_cmd(file: IO[str],
-                  rewrite: str = 'Simplified',
-                  interactionId: int = 0,
-                  where: Range = None,
-                  expr: str = ''):
+def goal_type_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Goal type.
   """
   return ('goal_type', {'file': file, 'rewrite': rewrite, 'expr': expr, 'interactionId': interactionId, 'where': where})
@@ -336,20 +311,10 @@ def goal_type_cmd(file: IO[str],
 @click.option('-e', '--expr', 'expr', type=str, default='', help=expr_help)
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
-def elaborate_give_cmd(file: IO[str],
-                       rewrite: str = 'Simplified',
-                       interactionId: int = 0,
-                       where: Range = None,
-                       expr: str = ''):
+def elaborate_give_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Grabs the current goal's type and checks the expression in the hole against it. Returns the elaborated term.
   """
-  return ('elaborate_give', {
-    'file': file,
-    'rewrite': rewrite,
-    'expr': expr,
-    'interactionId': interactionId,
-    'where': where
-  })
+  return ('elaborate_give', {'file': file, 'rewrite': rewrite, 'expr': expr, 'interactionId': interactionId, 'where': where})
 
 
 @agda.command('goal_type_context')
@@ -358,20 +323,10 @@ def elaborate_give_cmd(file: IO[str],
 @click.option('-e', '--expr', 'expr', type=str, default='', help=expr_help)
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
-def goal_type_context_cmd(file: IO[str],
-                          rewrite: str = 'Simplified',
-                          interactionId: int = 0,
-                          where: Range = None,
-                          expr: str = ''):
+def goal_type_context_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Displays the current goal and context.
   """
-  return ('goal_type_context', {
-    'file': file,
-    'rewrite': rewrite,
-    'expr': expr,
-    'interactionId': interactionId,
-    'where': where
-  })
+  return ('goal_type_context', {'file': file, 'rewrite': rewrite, 'expr': expr, 'interactionId': interactionId, 'where': where})
 
 
 @agda.command('goal_type_context_infer')
@@ -380,20 +335,10 @@ def goal_type_context_cmd(file: IO[str],
 @click.option('-e', '--expr', 'expr', type=str, default='', help=expr_help)
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
-def goal_type_context_infer_cmd(file: IO[str],
-                                rewrite: str = 'Simplified',
-                                interactionId: int = 0,
-                                where: Range = None,
-                                expr: str = ''):
+def goal_type_context_infer_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Displays the current goal and context and infers the type of an expression.
   """
-  return ('goal_type_context_infer', {
-    'file': file,
-    'rewrite': rewrite,
-    'expr': expr,
-    'interactionId': interactionId,
-    'where': where
-  })
+  return ('goal_type_context_infer', {'file': file, 'rewrite': rewrite, 'expr': expr, 'interactionId': interactionId, 'where': where})
 
 
 @agda.command('goal_type_context_check')
@@ -402,20 +347,10 @@ def goal_type_context_infer_cmd(file: IO[str],
 @click.option('-e', '--expr', 'expr', type=str, default='', help=expr_help)
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
-def goal_type_context_check_cmd(file: IO[str],
-                                rewrite: str = 'Simplified',
-                                interactionId: int = 0,
-                                where: Range = None,
-                                expr: str = ''):
+def goal_type_context_check_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Grabs the current goal's type and checks the expression in the hole against it.
   """
-  return ('goal_type_context_check', {
-    'file': file,
-    'rewrite': rewrite,
-    'expr': expr,
-    'interactionId': interactionId,
-    'where': where
-  })
+  return ('goal_type_context_check', {'file': file, 'rewrite': rewrite, 'expr': expr, 'interactionId': interactionId, 'where': where})
 
 
 @agda.command('show_module_contents')
@@ -424,20 +359,10 @@ def goal_type_context_check_cmd(file: IO[str],
 @click.option('-e', '--expr', 'expr', type=str, default='', help=expr_help)
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
-def show_module_contents_cmd(file: IO[str],
-                             rewrite: str = 'Simplified',
-                             interactionId: int = 0,
-                             where: Range = None,
-                             expr: str = ''):
+def show_module_contents_cmd(file: IO[str], rewrite: str = 'Simplified', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Shows all the top-level names in the given module, along with their types. Uses the scope of the given goal.
   """
-  return ('show_module_contents', {
-    'file': file,
-    'rewrite': rewrite,
-    'expr': expr,
-    'interactionId': interactionId,
-    'where': where
-  })
+  return ('show_module_contents', {'file': file, 'rewrite': rewrite, 'expr': expr, 'interactionId': interactionId, 'where': where})
 
 
 @agda.command('make_case')
@@ -468,20 +393,10 @@ def why_in_scope_cmd(file: IO[str], interactionId: int = 0, where: Range = None,
 @click.option('-i', '--interactionId', 'interactionId', type=int, default=0, help=interaction_help)
 @click.option('-w', '--where', 'where', type=str, default=None, help=range_help)
 @click.option('-c', '--computeMode', 'computeMode', type=str, default='DefaultCompute', help=compute_help)
-def compute_cmd(file: IO[str],
-                computeMode: str = 'DefaultCompute',
-                interactionId: int = 0,
-                where: Range = None,
-                expr: str = ''):
+def compute_cmd(file: IO[str], computeMode: str = 'DefaultCompute', interactionId: int = 0, where: Range = None, expr: str = ''):
   """Compute the normal form of either selected code or given expression.
   """
-  return ('compute', {
-    'file': file,
-    'interactionId': interactionId,
-    'where': where,
-    'expr': expr,
-    'computeMode': computeMode
-  })
+  return ('compute', {'file': file, 'interactionId': interactionId, 'where': where, 'expr': expr, 'computeMode': computeMode})
 
 
 @agda.command('why_in_scope_toplevel')
