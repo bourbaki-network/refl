@@ -9,12 +9,14 @@
   - [List available versions of Agda](#list-available-versions-of-agda)
 - [Package manager](#package-manager)
   - [Install package](#install-package)
-    - [In present working directory](#in-present-working-directory)
-    - [For current user](#for-current-user)
-    - [Globally](#globally)
-    - [From git with specific commit hash](#from-git-with-specific-commit-hash)
-    - [From git with specific tag](#from-git-with-specific-tag)
-    - [From git with specific commit head or branch](#from-git-with-specific-commit-head-or-branch)
+    - [Location](#location)
+      - [In present working directory](#in-present-working-directory)
+      - [For current user](#for-current-user)
+      - [Globally](#globally)
+    - [Options](#options)
+      - [From git with specific commit hash](#from-git-with-specific-commit-hash)
+      - [From git with specific tag](#from-git-with-specific-tag)
+      - [From git with specific commit head or branch](#from-git-with-specific-commit-head-or-branch)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -56,25 +58,29 @@ refl version list
 
 ## Install package
 
-### In present working directory
+### Location
+
+#### In present working directory
 
 ```bash
 refl pkg install --git --url git@github.com:marcelosousa/smtlib.git --pwd
 ```
 
-### For current user
+#### For current user
 
 ```bash
 refl pkg install --git --url git@github.com:marcelosousa/smtlib.git --user
 ```
 
-### Globally
+#### Globally
 
 ```bash
 refl pkg install --git --url git@github.com:marcelosousa/smtlib.git --global
 ```
 
-### From git with specific commit hash
+### Options
+
+#### From git with specific commit hash
 
 ```bash
 refl pkg install \
@@ -84,7 +90,7 @@ refl pkg install \
   --pwd
 ```
 
-### From git with specific tag
+#### From git with specific tag
 
 ```bash
 refl pkg install \
@@ -94,7 +100,7 @@ refl pkg install \
   --pwd
 ```
 
-### From git with specific commit head or branch
+#### From git with specific commit head or branch
 
 ```bash
 refl pkg install \

@@ -55,6 +55,9 @@ def install(
 ):
   """Install package
   """
+  if local or remote:
+    assert name is not None, "Please pass the name of the package: --name <name>"
+
   name = git_parse(url).repo if name is None else name
   target_location = os.path.join(os.path.expanduser("~"), ".refl")
   if global_install:
@@ -73,7 +76,6 @@ def install(
     options = RemoteOptions(url=path)
 
   i = InstallPackage(name=name, origin=origin, options=options)
-
   i(target_location)
 
 

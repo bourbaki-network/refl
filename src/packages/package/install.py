@@ -7,7 +7,9 @@ from dataclasses import dataclass
 from os import path
 from typing import *
 
+import filetype
 from git import Repo
+from pyunpack import Archive
 
 from packages.common import GitOptions, LocalOptions, Origin, RemoteOptions
 from packages.package.package import Package
@@ -78,7 +80,7 @@ class Install(Package):
     if type(opts) == GitOptions:
       return self._git(opts.git_url, opts.head, opts.tag, opts.commit_hash)
     elif type(opts) == LocalOptions:
-      return self._local(opts.location)
+      return self._local(opts.local_url)
     elif type(opts) == RemoteOptions:
       return self._remote(opts.url)
 
@@ -113,48 +115,20 @@ class Install(Package):
     shutil.move(tmpdir, target_directory)
     return self
 
-  # def _local(self, location: str):
-  #   target_directory = path.join(self.where, f"{location}")
-  #   if self.installed(target_directory):
-  #     return self._load_lib_file(target_directory)
+  def _local(self, location: str):
+    target_directory = path.join(self.where, f"{self.name}")
 
-  #   # try to uncompress file if needed
-  #   file_type = filetype.guess(location)
-  #   if file_type in ARCHIVE_TYPES:
-  #     tmpdir = tempfile.mkdtemp()
-  #     Archive(location).extractall(tmpdir)
-  #   else:
-  #     tmpdir = location
+    # try to uncompress file if needed
+    try:
+      file_type = filetype.guess(location).mime
+    except IsADirectoryError:
+      file_type = ""
+    print(file_type)
+    if file_type in ARCHIVE_TYPES:
+      tmpdir = tempfile.mkdtemp()
+      Archive(location).extractall(tmpdir)
+    else:
+      tmpdir = location
 
-  #   shutil.move(tmp_dir, target_directory)
-  #   return self
-
-  # def _remote(self, url: str):
-  #   target_directory = path.join(self.where, f"{identifier}")
-  #   if self.installed(target_directory):
-  #     return self._load_lib_file(target_directory)
-
-  #   location = tempfile.mkdtemp()
-  #   response = requests.get(url, stream=True)
-  #   download_file = path.join(location, "downloaded.file")
-
-  #   # download the file
-  #   with open(download_file, "wb") as handle:
-  #     for data in tqdm(response.iter_content()):
-  #       handle.write(data)
-
-  #     # try to uncompress file if needed
-  #     file_type = filetype.guess(download_file)
-  #     if file_type in ARCHIVE_TYPES:
-  #       tmpdir = tempfile.mkdtemp()
-  #       Archive(download_file).extractall(tmpdir)
-  #     else:
-  #       raise Exception("Unknown file type, could not uncompress")
-
-  #     # check if there exists a ".agda-lib" file
-  #     lib_file = glob.glob(path.join(tmpdir, "*.agda-lib"))
-  #     assert len(lib_file) == 0, ".agda-lib file missing from library root"
-
-  #     # move directory to `where`
-  #   shutil.move(tmp_dir, target_directory)
-  #   return self
+    shutil.copytree(tmpdir, target_directory)
+    return self
