@@ -6,7 +6,7 @@ import os
 import click
 from giturlparse import parse as git_parse
 
-from packages import GitOptions, InstallPackage, LocalOptions, Origin, RemoteOptions
+from packages import GitOptions, InstallPackage, LocalOptions, Origin, RemoteOptions, UninstallPackage
 
 CONTEXT_SETTINGS = {
   'max_content_width': 200,
@@ -80,16 +80,23 @@ def install(
 
 
 @pkg.command('uninstall')
-@click.option('-n', '--name', 'name', type=str, help='Package name')
-def uninstall():
+@click.option('-n', '--name', 'name', type=str, help='Name of the package')
+@click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
+@click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
+@click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
+def uninstall(
+  name: str,
+  user: bool = False,
+  global_install: bool = False,
+  pwd: bool = False,
+):
   """Uninstall package
   """
-  pass
+  target_location = os.path.join(os.path.expanduser("~"), ".refl")
+  if global_install:
+    target_location = "/usr/lib/refl"
+  if pwd:
+    target_location = "./.refl"
 
-
-@pkg.command('search')
-@click.option('-n', '--name', 'name', type=str, help='Package name')
-def search():
-  """Search for a package (WIP)
-  """
-  raise NotImplementedError()
+  u = UninstallPackage(name=name)
+  u(target_location)

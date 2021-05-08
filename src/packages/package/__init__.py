@@ -2,5 +2,4 @@
 # -*- coding: utf-8 -*-
 
 from .install import *
-# from .install import *
 from .package import *

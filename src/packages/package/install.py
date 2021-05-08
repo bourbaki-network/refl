@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
 import shutil
 import tempfile
-from dataclasses import dataclass
 from os import path
 from typing import *
 
 import filetype
+import inquirer
+from fuzzywuzzy import fuzz
 from git import Repo
 from pyunpack import Archive
 
@@ -31,7 +33,6 @@ ARCHIVE_TYPES = [
 ]
 
 
-@dataclass
 class Install(Package):
   def __init__(
     self,
@@ -121,7 +122,7 @@ class Install(Package):
   def _local(self, location: str):
     target_directory = path.join(self.where, f"{self.name}")
     if path.exists(target_directory):
-      log.warn(f"{self.name} is already installed at desired location.")
+      log.warn(f"{self.name} is already installed at {target_directory}.")
       return self
 
     # try to uncompress file if needed
@@ -142,3 +143,45 @@ class Install(Package):
   @staticmethod
   def exists(target_location, name):
     return path.exists(path.join(target_location, name))
+
+
+class Uninstall(Package):
+  def __init__(self, name: str):
+    self.name = name
+
+  def __call__(self, where: str, non_exact: bool = True):
+    self.where = where
+    target_directory = path.join(self.where, f"{self.name}")
+    if not path.exists(target_directory):
+      log.error(f"{self.name} is not installed in the specified location: {target_directory}.")
+      if non_exact:
+        # search for deterministic matches, for packages custom installed from git etc
+        log.warn("Trying to find non-exact matches...")
+        dirs = os.listdir(self.where)
+        deterministic = [x for x in dirs if self.name in x]
+        if len(deterministic) > 0:
+          questions = [inquirer.List(
+            'version',
+            message="Which version would you like to uninstall?",
+            choices=deterministic,
+          )]
+          version = inquirer.prompt(questions)
+          version = version['version']
+          target_directory = path.join(self.where, version)
+        # string-distance matching
+        else:
+          non_deterministic = [x for x in dirs if fuzz.ratio(self.name, x) > 70]
+          if len(non_deterministic) <= 0:
+            log.error(f"Could not find any matches for {self.name}")
+          if len(non_deterministic) > 0:
+            questions = [inquirer.List(
+              'version',
+              message="Which version would you like to uninstall?",
+              choices=non_deterministic,
+            )]
+            version = inquirer.prompt(questions)
+            version = version['version']
+            target_directory = path.join(self.where, version)
+
+    shutil.rmtree(target_directory, ignore_errors=True)
+    return self

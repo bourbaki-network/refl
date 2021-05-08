@@ -17,6 +17,15 @@
       - [From git with specific commit hash](#from-git-with-specific-commit-hash)
       - [From git with specific tag](#from-git-with-specific-tag)
       - [From git with specific commit head or branch](#from-git-with-specific-commit-head-or-branch)
+  - [Uninstall Package](#uninstall-package)
+    - [Location](#location-1)
+      - [From current directory](#from-current-directory)
+      - [From current user's packages](#from-current-users-packages)
+      - [Globally](#globally-1)
+    - [Options](#options-1)
+      - [Uninstall packages specifically](#uninstall-packages-specifically)
+      - [Uninstall packages by package name](#uninstall-packages-by-package-name)
+      - [Uninstall packages by approx matches](#uninstall-packages-by-approx-matches)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -108,4 +117,46 @@ refl pkg install \
   --url git@github.com:pcapriotti/agda-base.git \
   --head computational-isos \
   --pwd
+```
+
+## Uninstall Package
+
+### Location
+
+#### From current directory
+
+```bash
+refl pkg uninstall --git --name smtlib --pwd
+```
+
+#### From current user's packages
+
+```bash
+refl pkg uninstall --git --name smtlib --user
+```
+
+#### Globally
+
+```bash
+refl pkg uninstall --git --name smtlib --global
+```
+
+### Options
+
+#### Uninstall packages specifically
+
+```bash
+refl pkg uninstall --name smtlib-c152c6fe59a0546c88e048f1ea50d193b997ef15 --pwd
+```
+
+#### Uninstall packages by package name
+
+```bash
+refl pkg uninstall --name agda-categories --pwd
+```
+
+#### Uninstall packages by approx matches
+
+```bash
+refl pkg uninstall --name aga-cegries --pwd
 ```
