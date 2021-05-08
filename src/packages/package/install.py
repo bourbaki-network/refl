@@ -94,6 +94,9 @@ class Install(Package):
       target_directory = path.join(self.where, f"{self.name}-{commit_hash}")
     else:
       target_directory = path.join(self.where, f"{self.name}")
+    if path.exists(target_directory):
+      log.warn(f"{self.name} is already installed at desired location.")
+      return self
 
     tmpdir = tempfile.mkdtemp()
     log.info(f"Cloning {url} into {tmpdir}")
@@ -117,6 +120,9 @@ class Install(Package):
 
   def _local(self, location: str):
     target_directory = path.join(self.where, f"{self.name}")
+    if path.exists(target_directory):
+      log.warn(f"{self.name} is already installed at desired location.")
+      return self
 
     # try to uncompress file if needed
     try:
@@ -132,3 +138,7 @@ class Install(Package):
 
     shutil.copytree(tmpdir, target_directory)
     return self
+
+  @staticmethod
+  def exists(target_location, name):
+    return path.exists(path.join(target_location, name))
