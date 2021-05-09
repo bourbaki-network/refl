@@ -6,7 +6,7 @@ import os
 import click
 from giturlparse import parse as git_parse
 
-from packages import GitOptions, InstallPackage, LocalOptions, Origin, RemoteOptions, UninstallPackage
+from packages import GitOptions, InstallPackage, ListPackage, LocalOptions, Origin, RemoteOptions, UninstallPackage
 
 CONTEXT_SETTINGS = {
   'max_content_width': 200,
@@ -98,25 +98,26 @@ def uninstall(name: str, user: bool = False, global_install: bool = False, pwd: 
   u(target_location, non_exact=soft)
 
 
-# @click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
-# @click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
-# @click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
-# def list(
-#   user: bool = False,
-#   global_install: bool = False,
-#   pwd: bool = False,
-# ):
-#   target_locations = []
-#   if global_install:
-#     target_locations.append("/usr/lib/refl")
-#   elif pwd:
-#     target_locations.append("./.refl")
-#   elif user:
-#     target_locations.append(os.path.join(os.path.expanduser("~"), ".refl"))
-#   else:
-#     target_locations.append("/usr/lib/refl")
-#     target_locations.append("./.refl")
-#     target_locations.append(os.path.join(os.path.expanduser("~"), ".refl"))
+@pkg.command('list')
+@click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
+@click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
+@click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
+def list(
+  user: bool = False,
+  global_install: bool = False,
+  pwd: bool = False,
+):
+  target_locations = []
+  if global_install:
+    target_locations.append("/usr/lib/refl")
+  elif pwd:
+    target_locations.append("./.refl")
+  elif user:
+    target_locations.append(os.path.join(os.path.expanduser("~"), ".refl"))
+  else:
+    target_locations.append("/usr/lib/refl")
+    target_locations.append("./.refl")
+    target_locations.append(os.path.join(os.path.expanduser("~"), ".refl"))
 
-#   for target_location in target_locations:
-#     ListPackage()(target_location)
+  for target_location in target_locations:
+    ListPackage()(target_location)

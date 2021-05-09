@@ -26,6 +26,7 @@
       - [Uninstall packages specifically](#uninstall-packages-specifically)
       - [Uninstall packages by package name](#uninstall-packages-by-package-name)
       - [Uninstall packages by approx matches](#uninstall-packages-by-approx-matches)
+  - [List Installed Packages](#list-installed-packages)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -159,4 +160,10 @@ refl pkg uninstall --name agda-categories --pwd
 
 ```bash
 refl pkg uninstall --name aga-cegries --pwd
+```
+
+## List Installed Packages
+
+```bash
+refl pkg list
 ```

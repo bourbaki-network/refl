@@ -3,6 +3,6 @@
 
 from .common import *
 from .package import Install as InstallPackage
-from .package import Package
+from .package import ListPackage, Package
 from .package import Uninstall as UninstallPackage
 from .project import *
