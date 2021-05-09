@@ -4,10 +4,10 @@
 from dataclasses import dataclass
 from typing import *
 
-import yaml
-from yaml import CLoader as Loader
-
 from packages.package.package import Package
+
+# import yaml
+# from yaml import CLoader as Loader
 
 
 @dataclass
@@ -18,8 +18,7 @@ class ReflProject:
   includes: Optional[list[str]] = None
   dependencies: Optional[list[Package]] = None
 
-  def __call__(self):
-    with open(self.location) as loc:
-      y = yaml.load(loc, Loader=Loader)
-
-      self.package = y
+  # def __call__(self):
+  #   with open(self.location) as loc:
+  #     y = yaml.load(loc, Loader=Loader)
+  #     self.package = y

@@ -88,13 +88,18 @@ class Install(Package):
   def _git(self, url: str, head: str = None, tag: str = None, commit_hash: str = None):
     # set target directory of install
     if head is not None:
-      target_directory = path.join(self.where, f"{self.name}-{head}")
+      package_name = f"{self.name}-{head}"
+      target_directory = path.join(self.where, package_name)
     elif tag is not None:
-      target_directory = path.join(self.where, f"{self.name}-{tag}")
+      package_name = f"{self.name}-{tag}"
+      target_directory = path.join(self.where, package_name)
     elif commit_hash is not None:
-      target_directory = path.join(self.where, f"{self.name}-{commit_hash}")
+      package_name = f"{self.name}-{commit_hash}"
+      target_directory = path.join(self.where, package_name)
     else:
-      target_directory = path.join(self.where, f"{self.name}")
+      package_name = f"{self.name}"
+      target_directory = path.join(self.where, package_name)
+
     if path.exists(target_directory):
       log.warn(f"{self.name} is already installed at desired location.")
       return self
@@ -117,6 +122,7 @@ class Install(Package):
       log.info(f"Checked out commit {commit_hash}")
 
     shutil.move(tmpdir, target_directory)
+    self.save(path.join(self.where, f"{package_name}.refl"))
     return self
 
   def _local(self, location: str):
@@ -138,11 +144,8 @@ class Install(Package):
       tmpdir = location
 
     shutil.copytree(tmpdir, target_directory)
+    self.save(path.join(self.where, f"{self.name}.refl"))
     return self
-
-  @staticmethod
-  def exists(target_location, name):
-    return path.exists(path.join(target_location, name))
 
 
 class Uninstall(Package):

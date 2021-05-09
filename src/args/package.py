@@ -84,12 +84,8 @@ def install(
 @click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
 @click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
 @click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
-def uninstall(
-  name: str,
-  user: bool = False,
-  global_install: bool = False,
-  pwd: bool = False,
-):
+@click.option('-s', '--soft', 'soft', type=bool, is_flag=True, help='Do a soft-string match')
+def uninstall(name: str, user: bool = False, global_install: bool = False, pwd: bool = False, soft: bool = True):
   """Uninstall package
   """
   target_location = os.path.join(os.path.expanduser("~"), ".refl")
@@ -99,4 +95,28 @@ def uninstall(
     target_location = "./.refl"
 
   u = UninstallPackage(name=name)
-  u(target_location)
+  u(target_location, non_exact=soft)
+
+
+# @click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
+# @click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
+# @click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
+# def list(
+#   user: bool = False,
+#   global_install: bool = False,
+#   pwd: bool = False,
+# ):
+#   target_locations = []
+#   if global_install:
+#     target_locations.append("/usr/lib/refl")
+#   elif pwd:
+#     target_locations.append("./.refl")
+#   elif user:
+#     target_locations.append(os.path.join(os.path.expanduser("~"), ".refl"))
+#   else:
+#     target_locations.append("/usr/lib/refl")
+#     target_locations.append("./.refl")
+#     target_locations.append(os.path.join(os.path.expanduser("~"), ".refl"))
+
+#   for target_location in target_locations:
+#     ListPackage()(target_location)
