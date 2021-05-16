@@ -3,12 +3,12 @@
 
 import click
 
-
 CONTEXT_SETTINGS = {
   'max_content_width': 200,
   # 'short_help_width':  400,
   'color': True
 }
+
 
 @click.group(chain=True, invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
 def project():
@@ -85,4 +85,3 @@ def init(
   """Initialize a new project
   """
   pass
-

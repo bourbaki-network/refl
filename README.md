@@ -27,6 +27,7 @@
       - [Uninstall packages by package name](#uninstall-packages-by-package-name)
       - [Uninstall packages by approx matches](#uninstall-packages-by-approx-matches)
   - [List Installed Packages](#list-installed-packages)
+  - [Project operations](#project-operations)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -166,4 +167,16 @@ refl pkg uninstall --name aga-cegries --pwd
 
 ```bash
 refl pkg list
+```
+
+## Project operations
+
+```bash
+# refl project new
+
+refl project init
+
+refl project install --all --pkg lol
+
+refl project update --all --pkg lol
 ```

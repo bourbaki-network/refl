@@ -6,8 +6,8 @@ from os import path
 
 from tabulate import tabulate
 
-from packages.package.package import Package
 from packages.common import GitOptions, LocalOptions
+from packages.package.package import Package
 from util.log import Logging
 
 log = Logging()()

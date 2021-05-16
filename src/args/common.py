@@ -5,9 +5,9 @@ import click
 
 from args.agda import agda
 from args.package import pkg
+from args.project import project
 from args.repl import repl
 from args.version import version
-from args.project import project
 
 CONTEXT_SETTINGS = {
   'max_content_width': 200,

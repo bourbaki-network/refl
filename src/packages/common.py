@@ -13,7 +13,7 @@ class Origin(Enum):
   NONE = "none"
 
   @staticmethod
-  def parse(data:str) -> 'Origin':
+  def parse(data: str) -> 'Origin':
     d = data.upper()
     try:
       return Origin[d]
@@ -28,12 +28,13 @@ class Kind(Enum):
   NONE = "none"
 
   @staticmethod
-  def parse(data:str) -> 'Kind':
+  def parse(data: str) -> 'Kind':
     d = data.upper()
     try:
       return Kind[d]
     except Exception as e:
       return Kind.NONE
+
 
 @dataclass
 class GitOptions:
@@ -43,7 +44,7 @@ class GitOptions:
   tag: Optional[str]
 
   @staticmethod
-  def parse(data:Any) -> Optional['GitOptions']:
+  def parse(data: Any) -> Optional['GitOptions']:
     if type(data) is not dict:
       return None
     try:
@@ -51,12 +52,13 @@ class GitOptions:
     except Exception as e:
       return None
 
+
 @dataclass
 class LocalOptions:
   local_url: str
 
   @staticmethod
-  def parse(data:Any) -> Optional['LocalOptions']:
+  def parse(data: Any) -> Optional['LocalOptions']:
     if type(data) is not dict:
       return None
     try:
@@ -64,16 +66,16 @@ class LocalOptions:
     except Exception as e:
       return None
 
+
 @dataclass
 class RemoteOptions:
   url: str
 
   @staticmethod
-  def parse(data:Any) -> Optional['RemoteOptions']:
+  def parse(data: Any) -> Optional['RemoteOptions']:
     if type(data) is not dict:
       return None
     try:
       return RemoteOptions(**data)
     except Exception as e:
       return None
-

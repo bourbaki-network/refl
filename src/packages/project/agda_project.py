@@ -18,7 +18,7 @@ class AgdaProject:
   dependencies: List[Package] = []
   includes: List[str] = []
 
-  def __call__(self, location:str):
+  def __call__(self, location: str):
     with open(location) as loc:
       y = yaml.load(loc, Loader=Loader)
 

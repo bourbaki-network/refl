@@ -59,24 +59,24 @@ class Package:
       with open(where) as f:
         y = yaml.load(f, Loader=Loader)
 
-        name             : str                  = y["name"]             if "name" in y else None
-        version          : Optional[str]        = y["version"]          if "version" in y else None
-        description      : Optional[str]        = y["description"]      if "description" in y else None
-        source_dir       : Optional[List[str]]  = y["source_dir"]       if "source_dir" in y else None
-        agda_version     : Optional[str]        = y["agda_version"]     if "agda_version" in y else None
-        readme           : Optional[str]        = y["readme"]           if "readme" in y else None
-        author           : Optional[str]        = y["author"]           if "author" in y else None
-        author_email     : Optional[str]        = y["author_email"]     if "author_email" in y else None
-        license          : Optional[str]        = y["license"]          if "license" in y else None
-        tags             : Optional[List[str]]  = y["tags"]             if "tags" in y else None
-        install_script   : Optional[str]        = y["install_script"]   if "install_script" in y else None
-        uninstall_script : Optional[str]        = y["uninstall_script"] if "uninstall_script" in y else None
+        name: str = y["name"] if "name" in y else None
+        version: Optional[str] = y["version"] if "version" in y else None
+        description: Optional[str] = y["description"] if "description" in y else None
+        source_dir: Optional[List[str]] = y["source_dir"] if "source_dir" in y else None
+        agda_version: Optional[str] = y["agda_version"] if "agda_version" in y else None
+        readme: Optional[str] = y["readme"] if "readme" in y else None
+        author: Optional[str] = y["author"] if "author" in y else None
+        author_email: Optional[str] = y["author_email"] if "author_email" in y else None
+        license: Optional[str] = y["license"] if "license" in y else None
+        tags: Optional[List[str]] = y["tags"] if "tags" in y else None
+        install_script: Optional[str] = y["install_script"] if "install_script" in y else None
+        uninstall_script: Optional[str] = y["uninstall_script"] if "uninstall_script" in y else None
 
         # entries with special typing needs
         origin: Origin = Origin.parse(y["origin"] if "origin" in y else "local")
 
         opt: Any = y["options"] if "options" in y else None
-        options:Optional[Union[GitOptions, LocalOptions]] = None
+        options: Optional[Union[GitOptions, LocalOptions]] = None
         if origin is Origin.GIT:
           options = GitOptions.parse(opt)
         elif origin is Origin.LOCAL:
@@ -85,7 +85,7 @@ class Package:
           log.error(f"Origin {origin} supplied for package {name} is not supported")
 
         deps: List[Any] = y["dependencies"] if "dependencies" in y else []
-        dependencies = [ y for y in [ Package.parse(x) for x in deps ] if y is not None ]
+        dependencies = [y for y in [Package.parse(x) for x in deps] if y is not None]
 
         return Package(
           name=name,

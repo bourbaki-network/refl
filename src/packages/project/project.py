@@ -11,14 +11,13 @@ from dataclasses_json import dataclass_json
 from yaml import FullLoader as Loader
 
 from packages.common import GitOptions, LocalOptions, Origin
-from util.log import Logging
 from packages.package.package import Package
 from packages.project.agda_project import AgdaProject
 from packages.project.refl_project import ReflProject
 from util.log import LOGLEVEL, Logging
 
-
 log = Logging(LOGLEVEL)()
+
 
 @dataclass_json
 @dataclass
@@ -26,7 +25,7 @@ class Project:
   project: Optional[Union[AgdaProject, ReflProject]] = None
 
   @staticmethod
-  def load(where:str) -> Optional['Project']:
+  def load(where: str) -> Optional['Project']:
     error = None
     project = None
 
@@ -43,4 +42,3 @@ class Project:
   #    Project(
 
   #   )
-
