@@ -7,6 +7,7 @@ from os import path
 from tabulate import tabulate
 
 from packages.package.package import Package
+from packages.common import GitOptions, LocalOptions
 from util.log import Logging
 
 log = Logging()()
@@ -29,9 +30,8 @@ class ListPackage(Package):
     for package in packages:
       p = Package.load(path.join(location, package))
       version = p.version
-
-      if "git_url" in p.options:
-        version = p.options["git_url"]
+      if type(p.options) is GitOptions:
+        version = p.options.git_url
       display.append([p.name, version, p.description, p.origin])
     log.info(f"Pakcages installed at {location}:")
     print(tabulate(display, headers=["Name", "Version", "Description", "Origin"], tablefmt="fancy_grid"))

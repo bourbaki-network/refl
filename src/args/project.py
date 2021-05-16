@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
-
 import click
-from giturlparse import parse as git_parse
 
-from packages import GitOptions, InstallPackage, ListPackage, LocalOptions, Origin, RemoteOptions, UninstallPackage
 
 CONTEXT_SETTINGS = {
   'max_content_width': 200,
@@ -14,15 +10,14 @@ CONTEXT_SETTINGS = {
   'color': True
 }
 
-
 @click.group(chain=True, invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
-def pkg():
-  """Manage Agda projects
+def project():
+  """Manage Agda packages
   """
   pass
 
 
-@pkg.command('install')
+@project.command('install')
 @click.option('-n', '--name', 'name', type=str, help='Name of the package')
 @click.option('-g', '--git', 'git', type=bool, is_flag=True, help='Install this package from git')
 @click.option('-l', '--local', 'local', type=bool, is_flag=True, help='Install this package from a local directory')
@@ -53,71 +48,41 @@ def install(
   global_install: bool = False,
   pwd: bool = False,
 ):
-  """Install package
+  """Install package into project
   """
-  if local or remote:
-    assert name is not None, "Please pass the name of the package: --name <name>"
-
-  name = git_parse(url).repo if name is None else name
-  target_location = os.path.join(os.path.expanduser("~"), ".refl")
-  if global_install:
-    target_location = "/usr/lib/refl"
-  if pwd:
-    target_location = "./.refl"
-
-  if git:
-    origin = Origin.GIT
-    options = GitOptions(git_url=url, head=head, commit_hash=commit_hash, tag=tag)
-  elif local:
-    origin = Origin.LOCAL
-    options = LocalOptions(local_url=location)
-  elif remote:
-    origin = Origin.REMOTE
-    options = RemoteOptions(url=path)
-
-  i = InstallPackage(name=name, origin=origin, options=options)
-  i(target_location)
+  pass
 
 
-@pkg.command('uninstall')
+@project.command('uninstall')
 @click.option('-n', '--name', 'name', type=str, help='Name of the package')
 @click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
 @click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
 @click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
 @click.option('-s', '--soft', 'soft', type=bool, is_flag=True, help='Do a soft-string match')
 def uninstall(name: str, user: bool = False, global_install: bool = False, pwd: bool = False, soft: bool = True):
-  """Uninstall package
+  """Uninstall package from project
   """
-  target_location = os.path.join(os.path.expanduser("~"), ".refl")
-  if global_install:
-    target_location = "/usr/lib/refl"
-  if pwd:
-    target_location = "./.refl"
-
-  u = UninstallPackage(name=name)
-  u(target_location, non_exact=soft)
+  pass
 
 
-@pkg.command('list')
-@click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
-@click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
-@click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
-def list(
+@project.command('update')
+def update(
   user: bool = False,
   global_install: bool = False,
   pwd: bool = False,
 ):
-  target_locations = []
-  if global_install:
-    target_locations.append("/usr/lib/refl")
-  elif pwd:
-    target_locations.append("./.refl")
-  elif user:
-    target_locations.append(os.path.join(os.path.expanduser("~"), ".refl"))
-  else:
-    target_locations.append("/usr/lib/refl")
-    target_locations.append("./.refl")
-    target_locations.append(os.path.join(os.path.expanduser("~"), ".refl"))
+  """Update all project dependencies
+  """
+  pass
 
-  for target_location in target_locations:
-    ListPackage()(target_location)
+
+@project.command('init')
+def init(
+  user: bool = False,
+  global_install: bool = False,
+  pwd: bool = False,
+):
+  """Initialize a new project
+  """
+  pass
+

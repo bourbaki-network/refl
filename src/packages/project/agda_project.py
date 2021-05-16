@@ -6,7 +6,7 @@ from os import path
 from typing import *
 
 import yaml
-from yaml import CLoader as Loader
+from yaml import FullLoader as Loader
 
 from packages.common import LocalOptions, Origin
 from packages.package.package import Package
@@ -14,19 +14,18 @@ from packages.package.package import Package
 
 @dataclass
 class AgdaProject:
-  location: str
   name: Optional[str] = None
-  dependencies: Optional[list[Package]] = None
-  includes: Optional[list[str]] = None
+  dependencies: List[Package] = []
+  includes: List[str] = []
 
-  def __call__(self):
-    with open(self.location) as loc:
+  def __call__(self, location:str):
+    with open(location) as loc:
       y = yaml.load(loc, Loader=Loader)
 
       # Parse all (local) dependencies
       if "depend" in y:
         depends = self._remove_comment(y["depend"]).split()
-        basepath = path.dirname(self.location)
+        basepath = path.dirname(location)
         if len(depends) > 0:
           self.dependencies = []
 
@@ -37,11 +36,12 @@ class AgdaProject:
       # Parse all include directories
       if "include" in y:
         includes = self._remove_comment(y["include"])
-        self.includes = " ".join(includes.split())
+        self.includes = includes.split()
 
       # Parse project name
       if "name" in y:
         self.name = self._remove_comment(y["name"])
+    return self
 
   def _parse_dependencies(self, file) -> List[Package]:
     with open(file) as dloc:

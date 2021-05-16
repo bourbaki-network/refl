@@ -6,19 +6,30 @@ from typing import *
 
 from packages.package.package import Package
 
-# import yaml
-# from yaml import CLoader as Loader
+import yaml
+from yaml import FullLoader as Loader
+from dataclasses_json import dataclass_json
 
 
+@dataclass_json
 @dataclass
 class ReflProject:
-  location: str
   name: Optional[str] = None
-  package: Optional[Package] = None
-  includes: Optional[list[str]] = None
-  dependencies: Optional[list[Package]] = None
+  includes: List[str] = []
+  dependencies: List[Package] = []
 
-  # def __call__(self):
-  #   with open(self.location) as loc:
-  #     y = yaml.load(loc, Loader=Loader)
-  #     self.package = y
+  @staticmethod
+  def __call__(location: str) -> Optional[ReflProject]:
+    with open(location) as loc:
+      y = yaml.load(loc, Loader=Loader)
+
+      name:str = y["name"] if "name" in y else None
+      includes:List[str] = y["includes"] if "includes" in y else []
+      dependencies:List[Any] = y["dependencies"] if "dependencies" in y else []
+
+      return ReflProject(
+        name=name,
+        includes=includes,
+        dependencies=dependencies
+      )
+    return None
