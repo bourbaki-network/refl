@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
+
 import click
+from giturlparse import parse as git_parse
 from prompt_toolkit import prompt
 
-from packages import Project
+from packages import GitOptions, InstallPackage, LocalOptions, Origin, Project
+from util.log import LOGLEVEL, Logging
+
+log = Logging(LOGLEVEL)()
 
 CONTEXT_SETTINGS = {
   'max_content_width': 200,
@@ -32,9 +38,6 @@ def project():
 @click.option('-g', '--location', 'location', type=str, help='Local: Location of the local package')
 @click.option('-g', '--path', 'path', type=str, help='Remote: URL of the remote package')
 @click.option('-g', '--identifier', 'identifier', type=str, help='Remote: Name / identifier of the package')
-@click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
-@click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
-@click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
 def install(
   name: str,
   git: bool = False,
@@ -47,13 +50,39 @@ def install(
   location: str = "",
   path: str = "",
   identifier: str = "",
-  user: bool = False,
-  global_install: bool = False,
-  pwd: bool = False,
 ):
   """Install package into project
   """
-  pass
+  p = Project.load("project.refl")
+  if p.exists(name):
+    log.info(f"Package {name} is already installed")
+    return
+  else:
+    if local or remote:
+      assert name is not None, "Please pass the name of the package: --name <name>"
+    if git and name is None:
+      name = git_parse(url).repo if name is None else name
+    target_location = os.path.join(".refl")
+
+    if git:
+      origin = Origin.GIT
+      options = GitOptions(git_url=url, head=head, commit_hash=commit_hash, tag=tag)
+    elif local:
+      origin = Origin.LOCAL
+      options = LocalOptions(local_url=location)
+
+    i = InstallPackage(name=name, origin=origin, options=options)
+    i(target_location)
+    p.add_dependency(
+      name=name,
+      git=git,
+      local=local,
+      url=url,
+      head=head,
+      tag=tag,
+      commit_hash=commit_hash,
+      location=location,
+    )
 
 
 @project.command('uninstall')
