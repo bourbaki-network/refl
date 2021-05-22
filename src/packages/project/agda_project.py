@@ -15,10 +15,24 @@ from packages.package.package import Package
 @dataclass
 class AgdaProject:
   name: Optional[str] = None
-  dependencies: List[Package] = []
-  includes: List[str] = []
+  dependencies: Optional[List[Package]] = None
+  includes: Optional[List[str]] = None
+
+  @staticmethod
+  def parse(data: Any) -> Optional['AgdaProject']:
+    if type(data) is not dict:
+      return None
+    try:
+      return AgdaProject(**data)
+    except Exception as e:
+      return None
 
   def __call__(self, location: str):
+    if self.dependencies is None:
+      self.dependencies = []
+    if self.includes is None:
+      self.includes = []
+
     with open(location) as loc:
       y = yaml.load(loc, Loader=Loader)
 

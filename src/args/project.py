@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import click
+from prompt_toolkit import prompt
+
+from packages import Project
 
 CONTEXT_SETTINGS = {
   'max_content_width': 200,
@@ -77,11 +80,11 @@ def update(
 
 
 @project.command('init')
-def init(
-  user: bool = False,
-  global_install: bool = False,
-  pwd: bool = False,
-):
+def init():
   """Initialize a new project
   """
-  pass
+  name = prompt("Name of this project:")
+  include = prompt("Name of the project's source directory: [default:src]")
+  include = "src" if include is None or include == "" else include
+
+  Project.init(".", name, [include])
