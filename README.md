@@ -28,6 +28,14 @@
       - [Uninstall packages by approx matches](#uninstall-packages-by-approx-matches)
   - [List Installed Packages](#list-installed-packages)
   - [Project operations](#project-operations)
+    - [Initialize a new project](#initialize-a-new-project)
+    - [Install a package](#install-a-package)
+      - [From git](#from-git)
+      - [From a local location](#from-a-local-location)
+    - [Update a package](#update-a-package)
+      - [Pull a new version from github](#pull-a-new-version-from-github)
+      - [Pull a new version from local](#pull-a-new-version-from-local)
+    - [Uninstall a package](#uninstall-a-package)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -160,7 +168,7 @@ refl pkg uninstall --name agda-categories --pwd
 #### Uninstall packages by approx matches
 
 ```bash
-refl pkg uninstall --name aga-cegries --pwd
+refl pkg uninstall --name aga-cegries --pwd --soft
 ```
 
 ## List Installed Packages
@@ -171,12 +179,53 @@ refl pkg list
 
 ## Project operations
 
+### Initialize a new project
+
+Creates a new project file for tracking dependencies. It is an interactive command.
+
 ```bash
-# refl project new
-
 refl project init
+> Name of this project:
+> Name of the project's source directory: [default:src]
+```
 
-refl project install --all --pkg lol
+### Install a package
 
-refl project update --all --pkg lol
+#### From git
+
+```bash
+refl project install\
+  --name smtlib \
+  --git \
+  --url git@github.com:marcelosousa/smtlib.git \
+  --commit_hash c152c6fe59a0546c88e048f1ea50d193b997ef15
+```
+
+#### From a local location
+
+```bash
+refl project install\
+  --local \
+  --name agda-categories \
+  --location ~/src/hott/agda-categories
+```
+
+### Update a package
+
+#### Pull a new version from github
+
+```bash
+refl project update --name smtlib --head master
+```
+
+#### Pull a new version from local
+
+```bash
+refl project update --name agda-categories --location ~/src/hott/agda-categories-new
+```
+
+### Uninstall a package
+
+```
+refl project uninstall --name agda-categories
 ```

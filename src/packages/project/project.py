@@ -72,6 +72,11 @@ class Project:
       self.project.dependencies.append(dep)
       self.save("project.refl")
 
+  def remove_dependency(self, name: str):
+    if self.project and self.project.dependencies:
+      self.project.dependencies = [d for d in self.project.dependencies if d.name != name]
+    self.save("project.refl")
+
   def save(self, where: str):
     with open(where, 'w') as f:
       if self.project is None:
@@ -84,7 +89,6 @@ class Project:
         self.project.includes = []
 
       data = json.loads(self.project.to_json())  # type: ignore
-      data = {k: v for k, v in data.items() if v is not None}
       yaml.safe_dump(data, f, allow_unicode=True, default_flow_style=False, indent=4)
 
   @staticmethod

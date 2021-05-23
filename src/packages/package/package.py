@@ -111,5 +111,4 @@ class Package:
   def save(self, where: str):
     with open(where, 'w') as f:
       data = json.loads(self.to_json())  # type: ignore
-      data = {k: v for k, v in data.items() if v is not None}
-      yaml.dump(data, f, allow_unicode=True)
+      yaml.safe_dump(data, f, allow_unicode=True, default_flow_style=False, indent=4)

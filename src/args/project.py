@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
-
 import click
 from giturlparse import parse as git_parse
 from prompt_toolkit import prompt
 
-from packages import GitOptions, InstallPackage, LocalOptions, Origin, Project
+from packages import GitOptions, InstallPackage, LocalOptions, Origin, Project, UninstallPackage
 from util.log import LOGLEVEL, Logging
 
 log = Logging(LOGLEVEL)()
@@ -62,7 +60,7 @@ def install(
       assert name is not None, "Please pass the name of the package: --name <name>"
     if git and name is None:
       name = git_parse(url).repo if name is None else name
-    target_location = os.path.join(".refl")
+    target_location = ".refl"
 
     if git:
       origin = Origin.GIT
@@ -87,14 +85,18 @@ def install(
 
 @project.command('uninstall')
 @click.option('-n', '--name', 'name', type=str, help='Name of the package')
-@click.option('-g', '--user', 'user', type=bool, is_flag=True, help='Install for user, typically at ~/.refl')
-@click.option('-g', '--global', 'global_install', is_flag=True, type=bool, help='Install globally, typically at /usr/lib/refl')
-@click.option('-g', '--pwd', 'pwd', type=bool, is_flag=True, help='Install for current project, typically at ./.refl')
 @click.option('-s', '--soft', 'soft', type=bool, is_flag=True, help='Do a soft-string match')
 def uninstall(name: str, user: bool = False, global_install: bool = False, pwd: bool = False, soft: bool = True):
   """Uninstall package from project
   """
-  pass
+  target_location = ".refl"
+  p = Project.load("project.refl")
+  if not p.exists(name):
+    log.info(f"Package {name} is not installed")
+    return
+  u = UninstallPackage(name=name)
+  removed = u(target_location, non_exact=soft)
+  p.remove_dependency(name=name)
 
 
 @project.command('update')

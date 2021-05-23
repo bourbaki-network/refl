@@ -162,6 +162,7 @@ class Uninstall(Package):
         log.warn("Trying to find non-exact matches...")
         dirs = os.listdir(self.where)
         deterministic = [x for x in dirs if self.name in x]
+        deterministic = [x for x in deterministic if ".refl" not in x]
         if len(deterministic) > 0:
           questions = [inquirer.List(
             'version',
@@ -174,6 +175,7 @@ class Uninstall(Package):
         # string-distance matching
         else:
           non_deterministic = [x for x in dirs if fuzz.ratio(self.name, x) > 70]
+          non_deterministic = [x for x in non_deterministic if ".refl" not in x]
           if len(non_deterministic) <= 0:
             log.error(f"Could not find any matches for {self.name}")
           if len(non_deterministic) > 0:
@@ -187,4 +189,6 @@ class Uninstall(Package):
             target_directory = path.join(self.where, version)
 
     shutil.rmtree(target_directory, ignore_errors=True)
+    if path.exists(f"{target_directory}.refl"):
+      os.remove(f"{target_directory}.refl")
     return self
