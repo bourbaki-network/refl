@@ -4,6 +4,7 @@
 import os
 
 import click
+from click_help_colors import HelpColorsGroup
 from giturlparse import parse as git_parse
 
 from packages import GitOptions, InstallPackage, ListPackage, LocalOptions, Origin, RemoteOptions, UninstallPackage
@@ -15,7 +16,12 @@ CONTEXT_SETTINGS = {
 }
 
 
-@click.group(chain=True, invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
+@click.group(cls=HelpColorsGroup,
+             help_headers_color='magenta',
+             help_options_color='cyan',
+             chain=True,
+             invoke_without_command=True,
+             context_settings=CONTEXT_SETTINGS)
 def pkg():
   """Manage Agda projects
   """

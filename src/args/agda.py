@@ -5,6 +5,7 @@ from typing import *
 from typing import IO
 
 import click
+from click_help_colors import HelpColorsGroup
 
 from commands import *
 from commands import Range
@@ -26,7 +27,12 @@ interaction_help = 'Interaction id, defaults to 0'
 
 
 # Agda passthrough commands
-@click.group(chain=True, invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
+@click.group(cls=HelpColorsGroup,
+             help_headers_color='magenta',
+             help_options_color='cyan',
+             chain=True,
+             invoke_without_command=True,
+             context_settings=CONTEXT_SETTINGS)
 def agda():
   """Interact with Agda
   """
@@ -35,8 +41,6 @@ def agda():
 
 @agda.resultcallback()
 def cli_process_commands(processors):
-  print("------------------------", processors)
-
   cmds = Commands(processors[0][1]['file'].name)
 
   # remove all file arguments

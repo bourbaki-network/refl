@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import click
+from click_help_colors import HelpColorsGroup
 from giturlparse import parse as git_parse
 from prompt_toolkit import prompt
 
@@ -17,7 +18,12 @@ CONTEXT_SETTINGS = {
 }
 
 
-@click.group(chain=True, invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
+@click.group(cls=HelpColorsGroup,
+             help_headers_color='magenta',
+             help_options_color='cyan',
+             chain=True,
+             invoke_without_command=True,
+             context_settings=CONTEXT_SETTINGS)
 def project():
   """Manage Agda packages
   """

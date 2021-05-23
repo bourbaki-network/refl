@@ -4,6 +4,7 @@
 from typing import *
 
 import click
+from click_help_colors import HelpColorsGroup
 
 from interpret import *
 
@@ -15,7 +16,12 @@ CONTEXT_SETTINGS = {
 
 
 # REPL commands
-@click.group(chain=True, invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
+@click.group(cls=HelpColorsGroup,
+             help_headers_color='magenta',
+             help_options_color='cyan',
+             chain=True,
+             invoke_without_command=True,
+             context_settings=CONTEXT_SETTINGS)
 def repl():
   """Start a REPL
   """

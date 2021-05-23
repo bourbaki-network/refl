@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import click
+from click_help_colors import HelpColorsGroup
 
 from args.agda import agda
 from args.package import pkg
@@ -16,7 +17,12 @@ CONTEXT_SETTINGS = {
 }
 
 
-@click.group(chain=False, invoke_without_command=False, context_settings=CONTEXT_SETTINGS)
+@click.group(cls=HelpColorsGroup,
+             help_headers_color='magenta',
+             help_options_color='green',
+             chain=False,
+             invoke_without_command=False,
+             context_settings=CONTEXT_SETTINGS)
 def cli():
   pass
 
