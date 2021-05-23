@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from typing import *
+
 import click
 from click_help_colors import HelpColorsGroup
 from giturlparse import parse as git_parse
 from prompt_toolkit import prompt
 
-from packages import GitOptions, InstallPackage, LocalOptions, Origin, Project, UninstallPackage
+from packages import GitOptions, InstallPackage, LocalOptions, Origin, Package, Project, UninstallPackage
 from util.log import LOGLEVEL, Logging
 
 log = Logging(LOGLEVEL)()
@@ -34,26 +36,20 @@ def project():
 @click.option('-n', '--name', 'name', type=str, help='Name of the package')
 @click.option('-g', '--git', 'git', type=bool, is_flag=True, help='Install this package from git')
 @click.option('-l', '--local', 'local', type=bool, is_flag=True, help='Install this package from a local directory')
-@click.option('-r', '--remote', 'remote', type=bool, is_flag=True, help='Install this package after downloading as an archive')
 @click.option('-u', '--url', 'url', type=str, help='Git: url of the git repository')
 @click.option('-h', '--head', 'head', type=str, help='Git: head of the git repository')
 @click.option('-t', '--tag', 'tag', type=str, help='Git: tag of the git repository')
 @click.option('-c', '--commit_hash', 'commit_hash', type=str, help='Git: commit_hash of the git repository')
 @click.option('-g', '--location', 'location', type=str, help='Local: Location of the local package')
-@click.option('-g', '--path', 'path', type=str, help='Remote: URL of the remote package')
-@click.option('-g', '--identifier', 'identifier', type=str, help='Remote: Name / identifier of the package')
 def install(
   name: str,
   git: bool = False,
   local: bool = False,
-  remote: bool = False,
   url: str = "",
   head: str = "",
   tag: str = "",
   commit_hash: str = "",
   location: str = "",
-  path: str = "",
-  identifier: str = "",
 ):
   """Install package into project
   """
@@ -62,7 +58,7 @@ def install(
     log.info(f"Package {name} is already installed")
     return
   else:
-    if local or remote:
+    if local:
       assert name is not None, "Please pass the name of the package: --name <name>"
     if git and name is None:
       name = git_parse(url).repo if name is None else name
@@ -106,14 +102,69 @@ def uninstall(name: str, user: bool = False, global_install: bool = False, pwd: 
 
 
 @project.command('update')
+@click.option('-n', '--name', 'name', type=str, help='Name of the package')
+@click.option('-g', '--git', 'git', type=bool, is_flag=True, help='Install this package from git')
+@click.option('-l', '--local', 'local', type=bool, is_flag=True, help='Install this package from a local directory')
+@click.option('-u', '--url', 'url', type=str, help='Git: url of the git repository')
+@click.option('-h', '--head', 'head', type=str, help='Git: head of the git repository')
+@click.option('-t', '--tag', 'tag', type=str, help='Git: tag of the git repository')
+@click.option('-c', '--commit_hash', 'commit_hash', type=str, help='Git: commit_hash of the git repository')
+@click.option('-g', '--location', 'location', type=str, help='Local: Location of the local package')
 def update(
-  user: bool = False,
-  global_install: bool = False,
-  pwd: bool = False,
+  name: str,
+  git: bool = False,
+  local: bool = False,
+  url: str = "",
+  head: str = "",
+  tag: str = "",
+  commit_hash: str = "",
+  location: str = "",
 ):
-  """Update all project dependencies
+  """Update a package
   """
-  pass
+  target_location = ".refl"
+  p = Project.load("project.refl")
+
+  dependencies = [x for x in p.project.dependencies if x.name == name]
+  dependency: Optional[Package] = None
+  if len(dependencies) > 0:
+    dependency = dependencies[0]
+
+  if dependency is None:
+    log.error("Could not find the dependency, maybe try with --soft")
+    return
+  if not git and not local:
+    git = Origin.parse(dependency.origin) is Origin.GIT
+    local = Origin.parse(dependency.origin) is Origin.LOCAL
+  if git:
+    url = dependency.options["git_url"] if url is None else url
+    name = git_parse(url).repo if name is None else name
+    origin = Origin.GIT
+    options = GitOptions(git_url=url, head=head, commit_hash=commit_hash, tag=tag)
+  elif local:
+    location = dependency.options["location"] if location is None else location
+    assert name is not None, "Please pass the name of the package: --name <name>"
+    origin = Origin.LOCAL
+    options = LocalOptions(local_url=location)
+
+  i = InstallPackage(name=name, origin=origin, options=options)
+  i(target_location)
+
+  # Uninstall the current package
+  u = UninstallPackage(name=name)
+  removed = u(target_location, non_exact=False)
+
+  p.remove_dependency(name=name)
+  p.add_dependency(
+    name=name,
+    git=git,
+    local=local,
+    url=url,
+    head=head,
+    tag=tag,
+    commit_hash=commit_hash,
+    location=location,
+  )
 
 
 @project.command('init')
